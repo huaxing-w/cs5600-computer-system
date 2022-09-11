@@ -34,8 +34,36 @@ No, it is not being effectively utilized.
 When CPU starts to run the first IO process, while it is waiting, the other process is being runnning.  
 However, after the first IO process finished, we need to run all rest of the non-IO process first, and then start to run the IO process.  
 Since we have 3 IO processes, first one is being used effectively, the rest two are not, cpu is idle and waiting IO to finish.  
-![q6](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q5.png)  
+![q6](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q6.png)  
 <br/>
+
+
+### 7. Now run the same processes, but with -I IO_RUN_IMMEDIATE set, which immediately runs the process that issued the I/O. How does this behavior differ? Why might running a process that just completed an I/O again be a good idea?  
+This is better than the last one, since we start to run another IO process right away, while it's waiting, CPU could run the non IO process, which increase the efficiency.  
+![q7](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q7.png)  
+<br/>
+
+### 8. Now run with some randomly generated processes: -s 1 -l 3:50,3:50 or -s 2 -l 3:50,3:50 or -s 3 -l 3:50,3:50. See if you can predict how the trace will turn out. What happens when you use the flag -I IO_RUN_IMMEDIATE vs. -I IO_RUN_LATER? What happens when you use -S SWITCH_ON_IO vs. -S SWITCH_ON_END?  
+Where we run -s 1 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 1 IO work and 2 regular work.  
+![q81](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q81.png)  
+<br/>
+Where we run -s 2 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 2 IO work and 1 regular work.  
+![q82](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q82.png)  
+<br/>
+result for flag -I IO_RUN_IMMEDIATE  
+![q83](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q83.png)  
+<br/>
+result for flag -I IO_RUN_LATER
+![q84](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q84.png)  
+<br/>
+result for flag -S SWITCH_ON_IO
+![q85](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q85.png)  
+<br/>
+result for flag -S SWITCH_ON_END
+![q86](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q86.png)  
+<br/>
+
+
 
 
 
