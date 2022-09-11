@@ -44,10 +44,10 @@ This is better than the last one, since we start to run another IO process right
 <br/>
 
 ### 8. Now run with some randomly generated processes: -s 1 -l 3:50,3:50 or -s 2 -l 3:50,3:50 or -s 3 -l 3:50,3:50. See if you can predict how the trace will turn out. What happens when you use the flag -I IO_RUN_IMMEDIATE vs. -I IO_RUN_LATER? What happens when you use -S SWITCH_ON_IO vs. -S SWITCH_ON_END?  
-Where we run -s 1 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 1 IO work and 2 regular work.  
+When we run -s 1 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 1 IO work and 2 regular work.  
 ![q81](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q81.png)  
 <br/>
-Where we run -s 2 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 2 IO work and 1 regular work.  
+When we run -s 2 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 2 IO work and 1 regular work.  
 ![q82](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q82.png)  
 <br/>
 result for flag -I IO_RUN_IMMEDIATE  
