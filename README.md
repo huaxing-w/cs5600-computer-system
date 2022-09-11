@@ -10,4 +10,6 @@ The total time to finish both processes is 11.
 The first process does not have IO, which takes 4 time intervals.  
 The second process has 1 instruction and takes 5 time intervals (default value) to finish the IO, another two time intervals to run IO and finish IO.  
 The total time would be 4+1+5+1=11.  
+![q2](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q2.png)  
+
 
