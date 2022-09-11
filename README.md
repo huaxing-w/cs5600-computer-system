@@ -14,10 +14,20 @@ The total time would be 4+1+5+1=11.
 <br/>
 
 ### 3. Switch the order of the processes: -l 1:0,4:100. What happens now? Does switching the order matter? Why? (As always, use -c and -p to see if you were right)  
-The running time becomes to 7. 
-We start to run IO process first, and while pid0 is waiting for finish, pid1 start to run, cpu does not have to wait for IO process. Efficiency gets increased.  
+The running time becomes to 7.  
+ We start to run IO process first, and while pid0 is waiting for finish, pid1 start to run, cpu does not have to wait for IO process. Efficiency gets increased.  
 ![q3](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q3.png)  
 <br/>
+
+### 4. We’ll now explore some of the other flags. One important flag is -S, which determines how the system reacts when a process issues an I/O. With the flag set to SWITCH ON END, the system will NOT switch to another process while one is doing I/O, instead waiting until the process is completely finished. What happens when you run the following two processes (-l 1:0,4:100 -c -S SWITCH_ON_END), one doing I/O and the other doing CPU work?  
+CPU will first run the IO process and wait unit it finished, and then start to run the second one.  
+![q4](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q4.png)  
+<br/>
+
+
+
+
+
 
 
 
