@@ -24,6 +24,11 @@ CPU will first run the IO process and wait unit it finished, and then start to r
 ![q4](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q4.png)  
 <br/>
 
+### 5. Now, run the same processes, but with the switching behavior set to switch to another process whenever one is WAITING for I/O (-l 1:0,4:100 -c -S SWITCH_ON_IO). What happens now? Use -c and -p to confirm that you are right.  
+CPU will schedule the two process so that when the IO process is running, it starts to run the other one to increase the efficiency so that we do not have to wait unit the IO process finished.  
+![q5](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q5.png)  
+<br/>
+
 
 
 
