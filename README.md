@@ -29,6 +29,14 @@ CPU will schedule the two process so that when the IO process is running, it sta
 ![q5](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q5.png)  
 <br/>
 
+### 6. One other important behavior is what to do when an I/O completes. With -I IO RUN LATER, when an I/O completes, the process that issued it is not necessarily run right away; rather, whatever was running at the time keeps running. What happens when you run this combination of processes? (Run ./process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -I IO_RUN_LATER -c -p) Are system resources being effectively utilized?  
+No, it is not being effectively utilized.  
+When CPU starts to run the first IO process, while it is waiting, the other process is being runnning.  
+However, after the first IO process finished, we need to run all rest of the non-IO process first, and then start to run the IO process.  
+Since we have 3 IO processes, first one is being used effectively, the rest two are not, cpu is idle and waiting IO to finish.  
+![q6](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q5.png)  
+<br/>
+
 
 
 
