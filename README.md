@@ -20,12 +20,14 @@ The running time becomes to 7.
 <br/>
 
 ### 4. We’ll now explore some of the other flags. One important flag is -S, which determines how the system reacts when a process issues an I/O. With the flag set to SWITCH ON END, the system will NOT switch to another process while one is doing I/O, instead waiting until the process is completely finished. What happens when you run the following two processes (-l 1:0,4:100 -c -S SWITCH_ON_END), one doing I/O and the other doing CPU work?  
-CPU will first run the IO process and wait unit it finished, and then start to run the second one.  
+CPU will first run the IO process and wait until it finished, and then start to run the second one.  
+Since switch is off, so we will have to wait until the first one finished.  
 ![q4](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q4.png)  
 <br/>
 
 ### 5. Now, run the same processes, but with the switching behavior set to switch to another process whenever one is WAITING for I/O (-l 1:0,4:100 -c -S SWITCH_ON_IO). What happens now? Use -c and -p to confirm that you are right.  
 CPU will schedule the two process so that when the IO process is running, it starts to run the other one to increase the efficiency so that we do not have to wait unit the IO process finished.  
+CPU switch to the second process when it find the first one is under IO work.  
 ![q5](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q5.png)  
 <br/>
 
