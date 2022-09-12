@@ -52,15 +52,19 @@ When we run -s 1 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 wi
 When we run -s 2 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 2 IO work and 1 regular work.  
 ![q82](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q82.png)  
 <br/>
+Run IO_RUN_IMMEDIATE will run the io once the pervious IO finished.  
 result for flag -I IO_RUN_IMMEDIATE  
 ![q83](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q83.png)  
 <br/>
+Run IO_RUN_LATER will first run the non IO process, for the pid0, since we only have 3 instructions, and the first one is non IO, the rest two will run after the first one.  
 result for flag -I IO_RUN_LATER
 ![q84](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q84.png)  
 <br/>
+Run SWITCH_ON_IO will allow us to switch the cpu to other process while this process is under IO work, the result shows that cpu run pid1 when pid0 is under IO waiting.  
 result for flag -S SWITCH_ON_IO
 ![q85](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q85.png)  
 <br/>
+Run SWITCH_ON_END will trun off the switch cpu mechanism, so the result shows that we first finish the task in PID0, although there are some idle time for wait pid0 IO work, after pid0 is done, we start to do pid1.  
 result for flag -S SWITCH_ON_END
 ![q86](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q86.png)  
 <br/>
