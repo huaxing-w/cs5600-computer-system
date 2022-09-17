@@ -375,9 +375,9 @@ int main(int argc, char* argv[]){
     return 0;
 }
 ```
-```
+
 Once we fork a new process, the num for parent and child are isolated to each other, thus I increase the num by 2 in parent, it would be 102. For child, it would be 101. 
-```
+
 
 
 
