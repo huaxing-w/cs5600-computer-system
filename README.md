@@ -383,10 +383,39 @@ Action: g forks k
 ```
 <br/>
 
-### 3. Switch the order of the processes: -l 1:0,4:100. What happens now? Does switching the order matter? Why? (As always, use -c and -p to see if you were right)  
-The running time becomes to 7.  
- We start to run IO process first, and while pid0 is waiting for finish, pid1 start to run, cpu does not have to wait for IO process. Efficiency gets increased.  
-![q3](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q3.png)  
+### 3. Now, switch the output by using the -t flag (e.g., run ./fork.py -t). Given a set of process trees, can you tell which actions were taken?
+
+```md
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -a 5 -f 0.9 -t -c
+
+ARG seed -1
+ARG fork_percentage 0.9
+ARG actions 5
+ARG action_list
+ARG show_tree True
+ARG just_final False
+ARG leaf_only False
+ARG local_reparent False
+ARG print_style fancy
+ARG solve True
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+                               a
+                               └── b
+Action: b EXITS
+                               a
+Action: a forks c
+                               a
+                               └── c
+Action: c EXITS
+                               a
+Action: a forks d
+                               a
+                               └── d
+```  
 <br/>
 
 ### 4. We’ll now explore some of the other flags. One important flag is -S, which determines how the system reacts when a process issues an I/O. With the flag set to SWITCH ON END, the system will NOT switch to another process while one is doing I/O, instead waiting until the process is completely finished. What happens when you run the following two processes (-l 1:0,4:100 -c -S SWITCH_ON_END), one doing I/O and the other doing CPU work?  
