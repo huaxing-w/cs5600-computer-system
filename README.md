@@ -507,18 +507,72 @@ Action: c EXITS
 ```
 <br/>
 
-### 5. Now, run the same processes, but with the switching behavior set to switch to another process whenever one is WAITING for I/O (-l 1:0,4:100 -c -S SWITCH_ON_IO). What happens now? Use -c and -p to confirm that you are right.  
-CPU will schedule the two process so that when the IO process is running, it starts to run the other one to increase the efficiency so that we do not have to wait unit the IO process finished.  
-CPU switch to the second process when it find the first one is under IO work.  
-![q5](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q5.png)  
+### 5. One last flag to explore is the -F flag, which skips intermediate steps and only asks to fill in the final process tree. Run ./fork.py -F and see if you can write down the final tree by looking at the series of actions generated. Use different random seeds to try this a few times. 
+```md
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -A a+b,b+c,c+d,c+e,c- -F -c
+
+ARG seed -1
+ARG fork_percentage 0.7
+ARG actions 5
+ARG action_list a+b,b+c,c+d,c+e,c-
+ARG show_tree False
+ARG just_final True
+ARG leaf_only False
+ARG local_reparent False
+ARG print_style fancy
+ARG solve True
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+Action: b forks c
+Action: c forks d
+Action: c forks e
+Action: c EXITS
+
+                        Final Process Tree:
+                               a
+                               ├── b
+                               ├── d
+                               └── e
+```
+
 <br/>
 
-### 6. One other important behavior is what to do when an I/O completes. With -I IO RUN LATER, when an I/O completes, the process that issued it is not necessarily run right away; rather, whatever was running at the time keeps running. What happens when you run this combination of processes? (Run ./process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -I IO_RUN_LATER -c -p) Are system resources being effectively utilized?  
-No, it is not being effectively utilized.  
-When CPU starts to run the first IO process, while it is waiting, the other process is being runnning.  
-However, after the first IO process finished, we need to run all rest of the non-IO process first, and then start to run the IO process.  
-Since we have 3 IO processes, first one is being used effectively, the rest two are not, cpu is idle and waiting IO to finish.  
-![q6](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q6.png)  
+### 6.  Finally, use both -t and -F together. This shows the final process tree, but then asks you to fill in the actions that took place. By looking at the tree, can you determine the exact actions that took place? In which cases can you tell? In which can’t you tell? Try some different random seeds to delve into this question.
+ 
+
+can not always tell what happened, there are differnt ways for children process to attach back to parent process.  
+```md
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -A a+b,b+c,c+d,c+e,c- -F -t
+
+ARG seed -1
+ARG fork_percentage 0.7
+ARG actions 5
+ARG action_list a+b,b+c,c+d,c+e,c-
+ARG show_tree True
+ARG just_final True
+ARG leaf_only False
+ARG local_reparent False
+ARG print_style fancy
+ARG solve False
+
+                           Process Tree:
+                               a
+
+Action?
+Action?
+Action?
+Action?
+Action?
+
+                        Final Process Tree:
+                               a
+                               ├── b
+                               ├── d
+                               └── e
+```
 <br/>
 
 
