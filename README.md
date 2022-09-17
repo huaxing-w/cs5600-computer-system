@@ -5,13 +5,15 @@
 <br/>
 
 ### 2. One control the simulator gives you is the fork percentage, controlled by the -f flag. The higher it is, the more likely the next action is a fork; the lower it is, the more likely the action is an exit. Run the simulator with a large number of actions (e.g., -a 100) and vary the fork percentage from 0.1 to 0.9. What do you think the resulting final process trees will look like as the percentage changes? Check your answer with -c. 
+```-a 100 is too much to display, use -a 10 instead```  
+
 ```md
-PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -a 100 -f 0.1 -c
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -a 10 -f 0.1 -c 
 
 ARG seed -1
 ARG fork_percentage 0.1
-ARG actions 100
-ARG action_list 
+ARG actions 10
+ARG action_list
 ARG show_tree False
 ARG just_final False
 ARG leaf_only False
@@ -45,245 +47,10 @@ Action: e EXITS
 Action: a forks f
                                a
                                └── f
-Action: f EXITS
+Action: f forks g
                                a
-Action: a forks g
-                               a
-                               └── g
-Action: g EXITS
-                               a
-Action: a forks h
-                               a
-                               └── h
-Action: h EXITS
-                               a
-Action: a forks i
-                               a
-                               └── i
-Action: i EXITS
-                               a
-Action: a forks j
-                               a
-                               └── j
-Action: j EXITS
-                               a
-Action: a forks k
-                               a
-                               └── k
-Action: k EXITS
-                               a
-Action: a forks l
-                               a
-                               └── l
-Action: l forks m
-                               a
-                               └── l
-                                   └── m
-Action: l EXITS
-                               a
-                               └── m
-Action: m EXITS
-                               a
-Action: a forks n
-                               a
-                               └── n
-Action: a forks o
-                               a
-                               ├── n
-                               └── o
-Action: o EXITS
-                               a
-                               └── n
-Action: n EXITS
-                               a
-Action: a forks p
-                               a
-                               └── p
-Action: a forks q
-                               a
-                               ├── p
-                               └── q
-Action: p EXITS
-                               a
-                               └── q
-Action: q EXITS
-                               a
-Action: a forks r
-                               a
-                               └── r
-Action: r EXITS
-                               a
-Action: a forks s
-                               a
-                               └── s
-Action: s EXITS
-                               a
-Action: a forks t
-                               a
-                               └── t
-Action: t EXITS
-                               a
-Action: a forks u
-                               a
-                               └── u
-Action: u EXITS
-                               a
-Action: a forks v
-                               a
-                               └── v
-Action: v EXITS
-                               a
-Action: a forks w
-                               a
-                               └── w
-Action: w EXITS
-                               a
-Action: a forks x
-                               a
-                               └── x
-Action: x EXITS
-                               a
-Action: a forks y
-                               a
-                               └── y
-Action: y EXITS
-                               a
-Action: a forks z
-                               a
-                               └── z
-Action: a forks A
-                               a
-                               ├── z
-                               └── A
-Action: z EXITS
-                               a
-                               └── A
-Action: A EXITS
-                               a
-Action: a forks B
-                               a
-                               └── B
-Action: B EXITS
-                               a
-Action: a forks C
-                               a
-                               └── C
-Action: C EXITS
-                               a
-Action: a forks D
-                               a
-                               └── D
-Action: D EXITS
-                               a
-Action: a forks E
-                               a
-                               └── E
-Action: E forks F
-                               a
-                               └── E
-                                   └── F
-Action: E EXITS
-                               a
-                               └── F
-Action: F EXITS
-                               a
-Action: a forks G
-                               a
-                               └── G
-Action: G EXITS
-                               a
-Action: a forks H
-                               a
-                               └── H
-Action: H EXITS
-                               a
-Action: a forks I
-                               a
-                               └── I
-Action: I EXITS
-                               a
-Action: a forks J
-                               a
-                               └── J
-Action: J EXITS
-                               a
-Action: a forks K
-                               a
-                               └── K
-Action: K EXITS
-                               a
-Action: a forks L
-                               a
-                               └── L
-Action: L EXITS
-                               a
-Action: a forks M
-                               a
-                               └── M
-Action: M EXITS
-                               a
-Action: a forks N
-                               a
-                               └── N
-Action: N EXITS
-                               a
-Action: a forks O
-                               a
-                               └── O
-Action: O EXITS
-                               a
-Action: a forks P
-                               a
-                               └── P
-Action: P EXITS
-                               a
-Action: a forks Q
-                               a
-                               └── Q
-Action: Q EXITS
-                               a
-Action: a forks R
-                               a
-                               └── R
-Action: R EXITS
-                               a
-Action: a forks S
-                               a
-                               └── S
-Action: S EXITS
-                               a
-Action: a forks T
-                               a
-                               └── T
-Action: T EXITS
-                               a
-Action: a forks U
-                               a
-                               └── U
-Action: U EXITS
-                               a
-Action: a forks V
-                               a
-                               └── V
-Action: V EXITS
-                               a
-Action: a forks W
-                               a
-                               └── W
-Action: W EXITS
-                               a
-Action: a forks X
-                               a
-                               └── X
-Action: X forks Y
-                               a
-                               └── X
-                                   └── Y
-Action: Y EXITS
-                               a
-                               └── X
-Action: X EXITS
-                               a
+                               └── f
+                                   └── g
 ```  
 
 ```-a 100 is too big to display, use -a 10 instead```  
