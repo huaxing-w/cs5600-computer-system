@@ -1,16 +1,290 @@
-# Questions  
-### 1. Run process-run.py with the following flags: -l 5:100,5:100. What should the CPU utilization be (e.g., the percent of time the CPU is in use?) Why do you know this? Use the -c and -p flags to see if you were right.
-CPU utilization should be 100%.  
-We have two processes, pid0 and pid1, each will 100% use cpu, so cpu will run pid0 first and then pid1, the utilization will be 100%, cpu will not be idle.  
-![q1](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q1.png)  
+# Homework(Simulation)  
+### Run ./fork.py -s 10 and see which actions are taken. Can you predict what the process tree looks like at each step? Use the -c flag to check your answers. Try some different random seeds (-s) or add more actions (-a) to get the hang of it.
+
+![q1](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/hw2/q1.png)  
 <br/>
 
-### 2. Now run with these flags: ./process-run.py -l 4:100,1:0. These flags specify one process with 4 instructions (all to use the CPU), and one that simply issues an I/O and waits for it to be done. How long does it take to complete both processes? Use -c and -p to find out if you were right.  
-The total time to finish both processes is 11.  
-The first process does not have IO, which takes 4 time intervals.  
-The second process has 1 instruction and takes 5 time intervals (default value) to finish the IO, another two time intervals to run IO and finish IO.  
-The total time would be 4+1+5+1=11.  
-![q2](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q2.png)  
+### 2. One control the simulator gives you is the fork percentage, controlled by the -f flag. The higher it is, the more likely the next action is a fork; the lower it is, the more likely the action is an exit. Run the simulator with a large number of actions (e.g., -a 100) and vary the fork percentage from 0.1 to 0.9. What do you think the resulting final process trees will look like as the percentage changes? Check your answer with -c. 
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -a 100 -f 0.1 -c
+
+ARG seed -1
+ARG fork_percentage 0.1
+ARG actions 100
+ARG action_list 
+ARG show_tree False
+ARG just_final False
+ARG leaf_only False
+ARG local_reparent False
+ARG print_style fancy
+ARG solve True
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+                               a
+                               └── b
+Action: b EXITS
+                               a
+Action: a forks c
+                               a
+                               └── c
+Action: c EXITS
+                               a
+Action: a forks d
+                               a
+                               └── d
+Action: d EXITS
+                               a
+Action: a forks e
+                               a
+                               └── e
+Action: e EXITS
+                               a
+Action: a forks f
+                               a
+                               └── f
+Action: f EXITS
+                               a
+Action: a forks g
+                               a
+                               └── g
+Action: g EXITS
+                               a
+Action: a forks h
+                               a
+                               └── h
+Action: h EXITS
+                               a
+Action: a forks i
+                               a
+                               └── i
+Action: i EXITS
+                               a
+Action: a forks j
+                               a
+                               └── j
+Action: j EXITS
+                               a
+Action: a forks k
+                               a
+                               └── k
+Action: k EXITS
+                               a
+Action: a forks l
+                               a
+                               └── l
+Action: l forks m
+                               a
+                               └── l
+                                   └── m
+Action: l EXITS
+                               a
+                               └── m
+Action: m EXITS
+                               a
+Action: a forks n
+                               a
+                               └── n
+Action: a forks o
+                               a
+                               ├── n
+                               └── o
+Action: o EXITS
+                               a
+                               └── n
+Action: n EXITS
+                               a
+Action: a forks p
+                               a
+                               └── p
+Action: a forks q
+                               a
+                               ├── p
+                               └── q
+Action: p EXITS
+                               a
+                               └── q
+Action: q EXITS
+                               a
+Action: a forks r
+                               a
+                               └── r
+Action: r EXITS
+                               a
+Action: a forks s
+                               a
+                               └── s
+Action: s EXITS
+                               a
+Action: a forks t
+                               a
+                               └── t
+Action: t EXITS
+                               a
+Action: a forks u
+                               a
+                               └── u
+Action: u EXITS
+                               a
+Action: a forks v
+                               a
+                               └── v
+Action: v EXITS
+                               a
+Action: a forks w
+                               a
+                               └── w
+Action: w EXITS
+                               a
+Action: a forks x
+                               a
+                               └── x
+Action: x EXITS
+                               a
+Action: a forks y
+                               a
+                               └── y
+Action: y EXITS
+                               a
+Action: a forks z
+                               a
+                               └── z
+Action: a forks A
+                               a
+                               ├── z
+                               └── A
+Action: z EXITS
+                               a
+                               └── A
+Action: A EXITS
+                               a
+Action: a forks B
+                               a
+                               └── B
+Action: B EXITS
+                               a
+Action: a forks C
+                               a
+                               └── C
+Action: C EXITS
+                               a
+Action: a forks D
+                               a
+                               └── D
+Action: D EXITS
+                               a
+Action: a forks E
+                               a
+                               └── E
+Action: E forks F
+                               a
+                               └── E
+                                   └── F
+Action: E EXITS
+                               a
+                               └── F
+Action: F EXITS
+                               a
+Action: a forks G
+                               a
+                               └── G
+Action: G EXITS
+                               a
+Action: a forks H
+                               a
+                               └── H
+Action: H EXITS
+                               a
+Action: a forks I
+                               a
+                               └── I
+Action: I EXITS
+                               a
+Action: a forks J
+                               a
+                               └── J
+Action: J EXITS
+                               a
+Action: a forks K
+                               a
+                               └── K
+Action: K EXITS
+                               a
+Action: a forks L
+                               a
+                               └── L
+Action: L EXITS
+                               a
+Action: a forks M
+                               a
+                               └── M
+Action: M EXITS
+                               a
+Action: a forks N
+                               a
+                               └── N
+Action: N EXITS
+                               a
+Action: a forks O
+                               a
+                               └── O
+Action: O EXITS
+                               a
+Action: a forks P
+                               a
+                               └── P
+Action: P EXITS
+                               a
+Action: a forks Q
+                               a
+                               └── Q
+Action: Q EXITS
+                               a
+Action: a forks R
+                               a
+                               └── R
+Action: R EXITS
+                               a
+Action: a forks S
+                               a
+                               └── S
+Action: S EXITS
+                               a
+Action: a forks T
+                               a
+                               └── T
+Action: T EXITS
+                               a
+Action: a forks U
+                               a
+                               └── U
+Action: U EXITS
+                               a
+Action: a forks V
+                               a
+                               └── V
+Action: V EXITS
+                               a
+Action: a forks W
+                               a
+                               └── W
+Action: W EXITS
+                               a
+Action: a forks X
+                               a
+                               └── X
+Action: X forks Y
+                               a
+                               └── X
+                                   └── Y
+Action: Y EXITS
+                               a
+                               └── X
+Action: X EXITS
+                               a
+``` 
 <br/>
 
 ### 3. Switch the order of the processes: -l 1:0,4:100. What happens now? Does switching the order matter? Why? (As always, use -c and -p to see if you were right)  
