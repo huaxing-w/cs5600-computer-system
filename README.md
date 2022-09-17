@@ -342,7 +342,43 @@ Action?
 ```
 <br/>
 
-# Chapter 5 - Homework(code) 
+# Chapter 5 - Homework(code)  
+
+### 1.  Write a program that calls fork(). Before calling fork(), have the main process access a variable (e.g., x) and set its value to something (e.g., 100). What value is the variable in the child process? What happens to the variable when both the child and parent change the value of x?  
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <sys/wait.h>
+
+int main(int argc, char* argv[]){
+    int num=100;
+    printf("hello I am parent pid:%d, the num is %d\n",(int)getpid(),num);
+    //create a fork
+    int rc=fork();
+    if(rc<0){
+        fprintf(stderr,"fork failed\n");
+        exit(1);
+    }
+    if(rc==0){
+        num+=1;
+        printf("hello, I am child pid:%d, the num is %d\n",(int)getpid(),num);
+    }
+    if(rc>0){
+        num+=2;
+        printf("hello I am parent pid:%d, the num is %d\n",(int)getpid(),num);
+    }
+    return 0;
+}
+```
+```
+Once we fork a new process, the num for parent and child are isolated to each other, thus I increase the num by 2 in parent, it would be 102. For child, it would be 101. 
+```
+
 
 
 
