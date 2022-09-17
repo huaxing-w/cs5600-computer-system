@@ -1,4 +1,4 @@
-# Homework(Simulation)  
+# Chapter 5 - Homework(Simulation)  
 ### Run ./fork.py -s 10 and see which actions are taken. Can you predict what the process tree looks like at each step? Use the -c flag to check your answers. Try some different random seeds (-s) or add more actions (-a) to get the hang of it.
 
 ![q1](https://github.com/huaxing-w/cs5600-computer-system/blob/homework2/pic/hw2/q1.png)  
@@ -341,6 +341,7 @@ Action?
                                └── e
 ```
 <br/>
+# Chapter 5 - Homework(code) 
 
 
 
