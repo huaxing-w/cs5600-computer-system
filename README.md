@@ -1,11 +1,11 @@
 # Homework(Simulation)  
 ### Run ./fork.py -s 10 and see which actions are taken. Can you predict what the process tree looks like at each step? Use the -c flag to check your answers. Try some different random seeds (-s) or add more actions (-a) to get the hang of it.
 
-![q1](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/hw2/q1.png)  
+![q1](https://github.com/huaxing-w/cs5600-computer-system/blob/homework2/pic/hw2/q1.png)  
 <br/>
 
 ### 2. One control the simulator gives you is the fork percentage, controlled by the -f flag. The higher it is, the more likely the next action is a fork; the lower it is, the more likely the action is an exit. Run the simulator with a large number of actions (e.g., -a 100) and vary the fork percentage from 0.1 to 0.9. What do you think the resulting final process trees will look like as the percentage changes? Check your answer with -c. 
-```
+```md
 PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -a 100 -f 0.1 -c
 
 ARG seed -1
@@ -284,7 +284,103 @@ Action: Y EXITS
                                └── X
 Action: X EXITS
                                a
-``` 
+```  
+
+```-a 100 is too big to display, use -a 10 instead```  
+
+```md
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -a 10 -f 0.9 -c 
+
+ARG seed -1
+ARG fork_percentage 0.9
+ARG actions 10
+ARG action_list
+ARG show_tree False
+ARG just_final False
+ARG leaf_only False
+ARG local_reparent False
+ARG print_style fancy
+ARG solve True
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+                               a
+                               └── b
+Action: b forks c
+                               a
+                               └── b
+                                   └── c
+Action: b forks d
+                               a
+                               └── b
+                                   ├── c
+                                   └── d
+Action: d forks e
+                               a
+                               └── b
+                                   ├── c
+                                   └── d
+                                       └── e
+Action: a forks f
+                               a
+                               ├── b
+                               │   ├── c
+                               │   └── d
+                               │       └── e
+                               └── f
+Action: d forks g
+                               a
+                               ├── b
+                               │   ├── c
+                               │   └── d
+                               │       ├── e
+                               │       └── g
+                               └── f
+Action: g forks h
+                               a
+                               ├── b
+                               │   ├── c
+                               │   └── d
+                               │       ├── e
+                               │       └── g
+                               │           └── h
+                               └── f
+Action: d forks i
+                               a
+                               ├── b
+                               │   ├── c
+                               │   └── d
+                               │       ├── e
+                               │       ├── g
+                               │       │   └── h
+                               │       └── i
+                               └── f
+Action: i forks j
+                               a
+                               ├── b
+                               │   ├── c
+                               │   └── d
+                               │       ├── e
+                               │       ├── g
+                               │       │   └── h
+                               │       └── i
+                               │           └── j
+                               └── f
+Action: g forks k
+                               a
+                               ├── b
+                               │   ├── c
+                               │   └── d
+                               │       ├── e
+                               │       ├── g
+                               │       │   ├── h
+                               │       │   └── k
+                               │       └── i
+                               │           └── j
+                               └── f
+```
 <br/>
 
 ### 3. Switch the order of the processes: -l 1:0,4:100. What happens now? Does switching the order matter? Why? (As always, use -c and -p to see if you were right)  
