@@ -576,34 +576,7 @@ Action?
 <br/>
 
 
-### 7. Now run the same processes, but with -I IO_RUN_IMMEDIATE set, which immediately runs the process that issued the I/O. How does this behavior differ? Why might running a process that just completed an I/O again be a good idea?  
-This is better than the last one, since we start to run another IO process right away, while it's waiting, CPU could run the non IO process, which increase the efficiency.  
-![q7](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q7.png)  
-<br/>
 
-### 8. Now run with some randomly generated processes: -s 1 -l 3:50,3:50 or -s 2 -l 3:50,3:50 or -s 3 -l 3:50,3:50. See if you can predict how the trace will turn out. What happens when you use the flag -I IO_RUN_IMMEDIATE vs. -I IO_RUN_LATER? What happens when you use -S SWITCH_ON_IO vs. -S SWITCH_ON_END?  
-When we run -s 1 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 1 IO work and 2 regular work.  
-![q81](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q81.png)  
-<br/>
-When we run -s 2 -l 3:50,3:50, pid0 will have 2 IO work, 1 regular work, pid1 will have 2 IO work and 1 regular work.  
-![q82](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q82.png)  
-<br/>
-Run IO_RUN_IMMEDIATE will run the io once the pervious IO finished.  
-result for flag -I IO_RUN_IMMEDIATE  
-![q83](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q83.png)  
-<br/>
-Run IO_RUN_LATER will first run the non IO process, for the pid0, since we only have 3 instructions, and the first one is non IO, the rest two will run after the first one.  
-result for flag -I IO_RUN_LATER
-![q84](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q84.png)  
-<br/>
-Run SWITCH_ON_IO will allow us to switch the cpu to other process while this process is under IO work, the result shows that cpu run pid1 when pid0 is under IO waiting.  
-result for flag -S SWITCH_ON_IO
-![q85](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q85.png)  
-<br/>
-Run SWITCH_ON_END will trun off the switch cpu mechanism, so the result shows that we first finish the task in PID0, although there are some idle time for wait pid0 IO work, after pid0 is done, we start to do pid1.  
-result for flag -S SWITCH_ON_END
-![q86](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q86.png)  
-<br/>
 
 
 
