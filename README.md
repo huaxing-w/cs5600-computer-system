@@ -418,10 +418,93 @@ Action: a forks d
 ```  
 <br/>
 
-### 4. We’ll now explore some of the other flags. One important flag is -S, which determines how the system reacts when a process issues an I/O. With the flag set to SWITCH ON END, the system will NOT switch to another process while one is doing I/O, instead waiting until the process is completely finished. What happens when you run the following two processes (-l 1:0,4:100 -c -S SWITCH_ON_END), one doing I/O and the other doing CPU work?  
-CPU will first run the IO process and wait until it finished, and then start to run the second one.  
-Since switch is off, so we will have to wait until the first one finished.  
-![q4](https://github.com/huaxing-w/cs5600-computer-system/blob/homework1/pic/q4.png)  
+### 4. One interesting thing to note is what happens when a child exits; what happens to its children in the process tree? To study this, let’s create a specific example: ./fork.py -A a+b,b+c,c+d,c+e,c-. This example has process ’a’ create ’b’, which in turn creates ’c’, which then creates ’d’ and ’e’. However, then, ’c’ exits. What do you think the process tree should like after the exit? What if you use the -R flag? Learn more about what happens to orphaned processes on your own to add more context.
+
+```without using -R flag```
+```md
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -A a+b,b+c,c+d,c+e,c- -c
+
+ARG seed -1
+ARG fork_percentage 0.7
+ARG actions 5
+ARG action_list a+b,b+c,c+d,c+e,c-
+ARG show_tree False
+ARG just_final False
+ARG leaf_only False
+ARG local_reparent False
+ARG print_style fancy
+ARG solve True
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+                               a
+                               └── b
+Action: b forks c
+                               a
+                               └── b
+                                   └── c
+Action: c forks d
+                               a
+                               └── b
+                                   └── c
+                                       └── d
+Action: c forks e
+                               a
+                               └── b
+                                   └── c
+                                       ├── d
+                                       └── e
+Action: c EXITS
+                               a
+                               ├── b
+                               ├── d
+                               └── e
+```  
+
+```use -R flag```  
+```md
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\fork.py -A a+b,b+c,c+d,c+e,c- -c -R
+
+ARG seed -1
+ARG fork_percentage 0.7
+ARG actions 5
+ARG action_list a+b,b+c,c+d,c+e,c-
+ARG show_tree False
+ARG just_final False
+ARG leaf_only False
+ARG local_reparent True
+ARG print_style fancy
+ARG solve True
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+                               a
+                               └── b
+Action: b forks c
+                               a
+                               └── b
+                                   └── c
+Action: c forks d
+                               a
+                               └── b
+                                   └── c
+                                       └── d
+Action: c forks e
+                               a
+                               └── b
+                                   └── c
+                                       ├── d
+                                       └── e
+Action: c EXITS
+                               a
+                               └── b
+                                   ├── d
+                                   └── e
+```
 <br/>
 
 ### 5. Now, run the same processes, but with the switching behavior set to switch to another process whenever one is WAITING for I/O (-l 1:0,4:100 -c -S SWITCH_ON_IO). What happens now? Use -c and -p to confirm that you are right.  
