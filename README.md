@@ -466,6 +466,57 @@ int main(int argc, char *argv[]){
 ```
 we could use sleep instead to let child process run first, and then the parent.
 
+### 4.  Write a program that calls fork() and then calls some form of exec() to run the program /bin/ls. See if you can try all of the variants of exec(), including (on Linux) execl(), execle(), execlp(), execv(), execvp(), and execvpe(). Why do you think there are so many variants of the same basic call?
+
+execl() receives the location of the executable file as its first argument. The next arguments will be available to the file when it’s executed. The last argument has to be NULL.  
+```int execl(const char *pathname, const char *arg, ..., NULL)```  
+
+execlp() is very similar to execl(). However, execlp() uses the PATH environment variable to look for the file. Therefore, the path to the executable file is not needed.  
+```int execlp(const char *file, const char *arg, ..., NULL)```  
+
+If we use execle(), we can pass environment variables to the function, and it’ll use them.  
+```int execle(const char *pathname, const char *arg, ..., NULL, char *const envp[])```  
+
+execv(), unlike execl(), receives a vector of arguments that will be available to the executable file. In addition, the last element of the vector has to be NULL.  
+```int execv(const char *pathname, char *const argv[])```  
+
+execvp() looks for the program in the PATH environment variable.  
+```int execvp(const char *file, char *const argv[])```  
+
+We can pass environment variables to execve(). In addition, the arguments need to be inside a NULL-terminated vector.  
+```int execve(const char *pathname, char *const argv[], char *const envp[])```  
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main(){
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+        }
+    if (rc == 0){
+
+        char * const argv[] = {"ls", NULL};
+        char * const envp[] = {NULL};
+        execvp("ls", argv);
+
+        //execl("/bin/ls", "ls", NULL);
+        //execlp("ls", "ls", NULL);
+        //execle("/bin/ls", "ls", NULL, envp);
+        //execv("/bin/ls", argv);
+        //execvpe("ls", argv, envp); 
+    }
+    if (rc > 0){
+        wait(NULL);
+    }
+    return 0;
+}
+```
 
 
 
