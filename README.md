@@ -516,6 +516,72 @@ int main(){
     }
     return 0;
 }
+```  
+
+### 5.  Now write a program that uses wait() to wait for the child proces to finish in the parent. What does wait() return? What happens if you use wait() in the child?
+the wc value is the pid of the child process.
+```
+bash-4.2$ ./ch5-q5 
+I am child process pid:46271
+I am parent process pid:46270, wc value is 46271
+```
+ 
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main(){
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+        }
+    if (rc == 0){
+        printf("I am child process pid:%d\n",(int)getpid());
+
+    }
+    if (rc > 0){
+        int wc=wait(NULL);
+        printf("I am parent process pid:%d, wc value is %d\n",(int)getpid(),wc);
+
+    }
+    return 0;
+}
+```
+
+if we call wait in child process, it will return -1, as there is no child process of childprocess.
+```
+bash-4.2$ ./ch5-q5 
+I am child process pid:46744, the wc value is -1
+I am parent process pid:46743, wc value is 46744
+```
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main(){
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+        }
+    if (rc == 0){
+        int wc=wait(NULL);
+        printf("I am child process pid:%d, the wc value is %d\n",(int)getpid(),wc);
+
+    }
+    if (rc > 0){
+        int wc=wait(NULL);
+        printf("I am parent process pid:%d, wc value is %d\n",(int)getpid(),wc);
+    }
+    return 0;
+}
 ```
 
 
