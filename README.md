@@ -375,9 +375,66 @@ int main(int argc, char* argv[]){
     return 0;
 }
 ```
+result:  
+```
+bash-4.2$ ./ch5-q1 
+hello I am parent pid:217574, the num is 100
+hello I am parent pid:217574, the num is 102
+hello, I am child pid:217575, the num is 101
+```
 
 Once we fork a new process, the num for parent and child are isolated to each other, thus I increase the num by 2 in parent, it would be 102. For child, it would be 101. 
 
+### 2.  Write a program that opens a file (with the open() system call) and then calls fork() to create a new process. Can both the child and parent access the file descriptor returned by open()? What happens when they are writing to the file concurrently, i.e., at the same time?
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <sys/wait.h>
+
+int main(int argc, char* argv[]){
+    printf("hello, I am parent pid:%d\n",(int)getpid());
+    int f = open("ch5-q2.txt", O_RDWR | O_CREAT | O_EXCL,S_IRWXU);
+    int rc=fork();
+    if(rc<0){
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    }
+    if(rc==0){
+        if (f < 0) { 
+            fprintf(stderr, "file open failed\n");
+            exit(1);
+        }
+        printf("hello, I am child pid:%d, I am writing to the file\n",(int)getpid()); 
+        write(f, "this is from child process\n", strlen("this is from child process\n"));   
+    }
+    if(rc>0){
+        if (f < 0) { 
+            fprintf(stderr, "file open failed\n");
+            exit(1);
+        }
+        printf("hello, I am parent pid:%d,I am writing to the file\n",(int)getpid()); 
+        write(f, "this is from parent process\n", strlen("this is from parent process\n"));
+        
+    }
+    close(f);
+    return 0;
+}
+```  
+they can access the file descriptor from open(), when they writing file concurrently, the order can not be determined unless we use wait().  
+
+result:
+```
+bash-4.2$ ./ch5-q2 
+hello, I am parent pid:236752
+hello, I am parent pid:236752,I am writing to the file
+hello, I am child pid:236753, I am writing to the file
+```
 
 
 
