@@ -654,7 +654,7 @@ int main(){
     return 0;
 }
 ```
-### 7.  Write a program that creates two children, and connects the standard output of one to the standard input of the other, using the pipe() system call.  
+### 8.  Write a program that creates two children, and connects the standard output of one to the standard input of the other, using the pipe() system call.  
 result:  
 ```
 bash-4.2$ ./ch5-q8 
@@ -712,6 +712,9 @@ int main(){
     return 0;
 }
 ```
+<br>
+
+# Chapter 6  - Homework(Measurement)  
 
 
 
