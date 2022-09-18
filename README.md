@@ -716,6 +716,19 @@ int main(){
 
 # Chapter 6  - Homework(Measurement)  
 
+result:
+```
+bash-4.2$ ./ch6 
+Hello, this is to test system call time
+***************************************
+system call time cost is : 0.464728 microseconds
+
+Hello, this is to test contect switch time
+***************************************
+context switch time cost is : 1.543710 microseconds
+```  
+
+
 ```c
 #define _GNU_SOURCE  
 #include <stdio.h>
