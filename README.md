@@ -583,7 +583,77 @@ int main(){
     return 0;
 }
 ```
+### 6.  Write a slight modification of the previous program, this time using waitpid() instead of wait(). When would waitpid() be useful?  
 
+when we don't child process to fully finished, but rather changing the state, the parent process starts to work.  
+
+```
+bash-4.2$ gcc -o ch5-q6 ch5-q6.c -Wall
+bash-4.2$ ./ch5-q6
+I am child process pid:47348
+I am parent process pid:47347, wc value is 47348
+```
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main(){
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+        }
+    if (rc == 0){
+        
+        printf("I am child process pid:%d\n",(int)getpid());
+
+    }
+    if (rc > 0){
+        int wc=waitpid(rc,NULL,0);
+        printf("I am parent process pid:%d, wc value is %d\n",(int)getpid(),wc);
+    }
+    return 0;
+}
+```
+
+### 7.  Write a program that creates a child process, and then in the child closes standard output (STDOUT FILENO). What happens if the child calls printf() to print some output after closing the descriptor?  
+since we close the stdout, the child process can not print anything.
+```
+bash-4.2$ gcc -o ch5-q7 ch5-q7.c -Wall
+bash-4.2$ ./ch5-q7 
+I am parent process pid:48283, wc value is 48284
+```
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main(){
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+        }
+    if (rc == 0){
+
+        close(STDOUT_FILENO);
+        
+        printf("I am child process pid:%d\n",(int)getpid());
+
+    }
+    if (rc > 0){
+        int wc=waitpid(rc,NULL,0);
+        printf("I am parent process pid:%d, wc value is %d\n",(int)getpid(),wc);
+    }
+    return 0;
+}
+```
 
 
 
