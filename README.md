@@ -879,6 +879,63 @@ Final statistics:
   Average -- Response: 133.33  Turnaround 333.33  Wait 133.33
 ```
 
+### 3.  Now do the same, but also with the RR scheduler and a time-slice of 1.  
+RR
+```
+Final statistics:
+  Job   0 -- Response: 0.00  Turnaround 298.00  Wait 198.00
+  Job   1 -- Response: 1.00  Turnaround 499.00  Wait 299.00
+  Job   2 -- Response: 2.00  Turnaround 600.00  Wait 300.00
+
+  Average -- Response: 1.00  Turnaround 465.67  Wait 265.67
+
+```
+### 4.  For what types of workloads does SJF deliver the same turnaround times as FIFO?  
+if the first arrive job is longer, the result would be differnt.  
+
+### 5.  For what types of workloads and quantum lengths does SJF deliver the same response times as RR?  
+if the job length and slice length is the same, the result is the same.  
+
+### 6.  What happens to response time with SJF as job lengths increase? Can you use the simulator to demonstrate the trend?
+
+response time also got increased.  
+
+```
+Final statistics:
+  Job   0 -- Response: 0.00  Turnaround 5.00  Wait 0.00
+  Job   1 -- Response: 5.00  Turnaround 11.00  Wait 5.00
+  Job   2 -- Response: 11.00  Turnaround 18.00  Wait 11.00
+
+  Average -- Response: 5.33  Turnaround 11.33  Wait 5.33
+```
+### 7.  What happens to response time with RR as quantum lengths increase? Can you write an equation that gives the worst-case response time, given N jobs?
+response time also got increased, the last one would be (N-1)*q
+```
+python ./scheduler.py -p RR -q 50 -l 100,200,300 -c
+Final statistics:
+  Job   0 -- Response: 0.00  Turnaround 200.00  Wait 100.00
+  Job   1 -- Response: 50.00  Turnaround 450.00  Wait 250.00
+  Job   2 -- Response: 100.00  Turnaround 600.00  Wait 300.00
+
+  Average -- Response: 50.00  Turnaround 416.67  Wait 216.67
+
+```
+
+```
+python ./scheduler.py -p RR -q 50 -l 100,200,300 -c
+Final statistics:
+  Job   0 -- Response: 0.00  Turnaround 220.00  Wait 120.00
+  Job   1 -- Response: 60.00  Turnaround 480.00  Wait 280.00
+  Job   2 -- Response: 120.00  Turnaround 600.00  Wait 300.00
+
+  Average -- Response: 60.00  Turnaround 433.33  Wait 233.33
+
+```
+
+
+
+
+
 
 
 
