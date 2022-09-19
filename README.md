@@ -814,8 +814,40 @@ int main(int argc,char* argv[]){
     return 0;
 }
 ```
+<br/>
 
+# Chapter 7  - Homework (Simulation)
 
+### 1.  Compute the response time and turnaround time when running three jobs of length 200 with the SJF and FIFO schedulers. 
+SJF  
+
+```
+Execution trace:
+  [ time   0 ] Run job 0 for 200.00 secs ( DONE at 200.00 )
+  [ time 200 ] Run job 1 for 200.00 secs ( DONE at 400.00 )
+  [ time 400 ] Run job 2 for 200.00 secs ( DONE at 600.00 )
+
+Final statistics:
+  Job   0 -- Response: 0.00  Turnaround 200.00  Wait 0.00
+  Job   1 -- Response: 200.00  Turnaround 400.00  Wait 200.00
+  Job   2 -- Response: 400.00  Turnaround 600.00  Wait 400.00
+
+  Average -- Response: 200.00  Turnaround 400.00  Wait 200.00
+```
+FIFO
+```
+Execution trace:
+  [ time   0 ] Run job 0 for 200.00 secs ( DONE at 200.00 )
+  [ time 200 ] Run job 1 for 200.00 secs ( DONE at 400.00 )
+  [ time 400 ] Run job 2 for 200.00 secs ( DONE at 600.00 )
+
+Final statistics:
+  Job   0 -- Response: 0.00  Turnaround 200.00  Wait 0.00
+  Job   1 -- Response: 200.00  Turnaround 400.00  Wait 200.00
+  Job   2 -- Response: 400.00  Turnaround 600.00  Wait 400.00
+
+  Average -- Response: 200.00  Turnaround 400.00  Wait 200.00
+```
 
 
 
