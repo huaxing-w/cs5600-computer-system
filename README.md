@@ -922,7 +922,7 @@ Final statistics:
 ```
 
 ```
-python ./scheduler.py -p RR -q 50 -l 100,200,300 -c
+python ./scheduler.py -p RR -q 60 -l 100,200,300 -c
 Final statistics:
   Job   0 -- Response: 0.00  Turnaround 220.00  Wait 120.00
   Job   1 -- Response: 60.00  Turnaround 480.00  Wait 280.00
