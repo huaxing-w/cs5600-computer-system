@@ -1601,6 +1601,53 @@ Random 634861 -> Winning ticket 1 (of 6) -> Run 2
 --> JOB 2 DONE at time 11
 ```
 
+### 2.  Now run with two specific jobs: each of length 10, but one (job 0) with just 1 ticket and the other (job 1) with 100 (e.g., -l 10:1,10:100). What happens when the number of tickets is so imbalanced? Will job 0 ever run before job 1 completes? How often? In general, what does such a ticket imbalance do to the behavior of lottery scheduling?
+
+```
+in total we have 101 ticket, each time we pick job 1 is 100/101.
+inorder for job1 to finish, we need to pick 10 times, that is (100/101)^10=0.905.
+so for job 0 to finish is 1-0.905=0.095.
+
+if we have such a inbalance ticket, some job may very hard to get executed. 
+```
+### 3.  When running with two jobs of length 100 and equal ticket allocations of 100 (-l 100:100,100:100), how unfair is the scheduler? Run with some different random seeds to determine the (probabilistic) answer; let unfairness be determined by how much earlier one job finishes than the other.
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\lottery.py -l 100:100,100:100  -s 1 -c
+--> JOB 1 DONE at time 196
+--> JOB 0 DONE at time 200
+
+196/200=0.98
+```
+
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\lottery.py -l 100:100,100:100 -c -s 2
+--> JOB 1 DONE at time 190
+--> JOB 0 DONE at time 200
+
+190/200=0.95
+```
+
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\lottery.py -l 100:100,100:100 -c -s 3
+--> JOB 0 DONE at time 196
+--> JOB 1 DONE at time 200
+
+196/200=0.98
+```
+
+It is pretty fair.  
+
+### 4.  How does your answer to the previous question change as the quantum size (-q) gets larger?
+```
+it will increase the unfairness.  
+
+q=1 F=0.98
+q=2 F=0.97
+q=5 F=0.95
+q=10 F=0.8
+```
+
+
 
 
 
