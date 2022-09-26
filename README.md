@@ -1647,6 +1647,11 @@ q=5 F=0.95
 q=10 F=0.8
 ```
 
+### 5.  Can you make a version of the graph that is found in the chapter? What else would be worth exploring? How would the graph look with a stride scheduler?
+it will be similiar to the lottery scheduling. But the short length job also got desired cpu share as stride scheduler is not randomly selecting process. So when the fairness reach to 1, the job length is less than the lottery one.  
+
+
+
 
 
 
