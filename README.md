@@ -16,6 +16,13 @@ to the topmost queue.
 ![uml](https://github.com/huaxing-w/cs5600-computer-system/blob/MLFQ/mlfq.png)
 
 
+### 3. Design
+create class job, feedBackQueue and MLFQ as shown above.  
+when program runs, ask user how many jobs are there, how many level of feedbackqueue do they want to have.  
+ask user to set the boost time interval.  
+start to run the program and cout the current situation.  
+Inorder to increase the response time, when a job finishes the IO, send to the back of the queue.  
+After finished all the jobs, print the final result for each job.  
 
 
 
