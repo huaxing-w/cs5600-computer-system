@@ -13,7 +13,7 @@ to the topmost queue.
 ```  
 
 ### 2. UML
-![uml](image.jpg)
+![uml](https://github.com/huaxing-w/cs5600-computer-system/blob/MLFQ/mlfq.png)
 
 
 
