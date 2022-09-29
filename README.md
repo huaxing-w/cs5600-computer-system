@@ -750,6 +750,88 @@ int main(int argc, char* argv[]){
     return 0;
 }
 ```
+### 4.   Now, while running your memory-user program, also (in a different terminal window, but on the same machine) run the free tool. How do the memory usage totals change when your program is running? How about when you kill the memory-user program? Do the numbers match your expectations? Try this for different amounts of memory usage. What happens when you use really large amounts of memory?
+```
+bash-4.2$ ./memory-user 100 1000
+
+
+bash-4.2$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:         385388       10765      340002         338       34619      373172
+Swap:          4095         857        3238
+bash-4.2$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:         385388       10860      339908         338       34619      373078
+Swap:          4095         857        3238
+```
+### 5.   Let’s try one more tool, known as pmap. Spend some time, and read the pmap manual page in detail.
+```
+https://www.geeksforgeeks.org/pmap-command-in-linux-with-examples/
+```
+### 6.   To use pmap, you have to know the process ID of the process you’re interested in. Thus, first run ps auxw to see a list of all processes; then, pick an interesting one, such as a browser. You can also use your memory-user program in this case (indeed, you can even have that program call getpid() and print out its PID for your convenience).
+```
+```
+
+### 7.   Now run pmap on some of these processes, using various flags (like -X) to reveal many details about the process. What do you see? How many different entities make up a modern address space, as opposed to our simple conception of code/stack/heap?
+```
+bash-4.2$ ./memory-user 100 1000
+
+
+bash-4.2$ pmap -x 157708
+157708:   ./memory-user 100 1000
+Address           Kbytes     RSS   Dirty Mode  Mapping
+0000000000400000       4       4       0 r-x-- memory-user
+0000000000600000       4       4       4 r---- memory-user
+0000000000601000       4       4       4 rw--- memory-user
+00007fe9b7929000  102404  102404  102404 rw---   [ anon ]
+00007fe9bdd2a000    1808     320       0 r-x-- libc-2.17.so
+00007fe9bdeee000    2044       0       0 ----- libc-2.17.so
+00007fe9be0ed000      16      16      16 r---- libc-2.17.so
+00007fe9be0f1000       8       8       8 rw--- libc-2.17.so
+00007fe9be0f3000      20      12      12 rw---   [ anon ]
+00007fe9be0f8000     136     108       0 r-x-- ld-2.17.so
+00007fe9be2f8000      12      12      12 rw---   [ anon ]
+00007fe9be317000       8       8       8 rw---   [ anon ]
+00007fe9be319000       4       4       4 r---- ld-2.17.so
+00007fe9be31a000       4       4       4 rw--- ld-2.17.so
+00007fe9be31b000       4       4       4 rw---   [ anon ]
+00007ffdd94e8000     132      16      16 rw---   [ stack ]
+00007ffdd9540000       8       4       0 r-x--   [ anon ]
+ffffffffff600000       4       0       0 r-x--   [ anon ]
+---------------- ------- ------- ------- 
+total kB          106624  102932  102496
+```
+
+### 8.   Finally, let’s run pmap on your memory-user program, with different amounts of used memory. What do you see here? Does the output from pmap match your expectations?
+```
+bash-4.2$ ./memory-user 50 1000
+
+
+bash-4.2$ pmap -x 158717
+158717:   ./memory-user 50 1000
+Address           Kbytes     RSS   Dirty Mode  Mapping
+0000000000400000       4       4       0 r-x-- memory-user
+0000000000600000       4       4       4 r---- memory-user
+0000000000601000       4       4       4 rw--- memory-user
+00007f19f741f000   51204   51204   51204 rw---   [ anon ]
+00007f19fa620000    1808     320       0 r-x-- libc-2.17.so
+00007f19fa7e4000    2044       0       0 ----- libc-2.17.so
+00007f19fa9e3000      16      16      16 r---- libc-2.17.so
+00007f19fa9e7000       8       8       8 rw--- libc-2.17.so
+00007f19fa9e9000      20      12      12 rw---   [ anon ]
+00007f19fa9ee000     136     108       0 r-x-- ld-2.17.so
+00007f19fabee000      12      12      12 rw---   [ anon ]
+00007f19fac0d000       8       8       8 rw---   [ anon ]
+00007f19fac0f000       4       4       4 r---- ld-2.17.so
+00007f19fac10000       4       4       4 rw--- ld-2.17.so
+00007f19fac11000       4       4       4 rw---   [ anon ]
+00007ffda20e0000     132      16      16 rw---   [ stack ]
+00007ffda213e000       8       4       0 r-x--   [ anon ]
+ffffffffff600000       4       0       0 r-x--   [ anon ]
+---------------- ------- ------- ------- 
+total kB           55424   51732   51296
+```
+
 
 
 
