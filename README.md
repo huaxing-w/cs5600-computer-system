@@ -586,10 +586,27 @@ Per-CPU stats
   CPU 1  utilization 100.00 [ warm 81.82 ]
 
 ```
+### 7.  One interesting aspect of caching multiprocessors is the opportunity for better-than-expected speed up of jobs when using multiple CPUs (and their caches) as compared to running jobs on a single processor. Specifically, when you run on N CPUs, sometimes you can speed up by more than a factor of N, a situation entitled super-linear speedup. To experiment with this, use the job description here (-L a:100:100,b:100:100,c:100:100) with a small cache (-M 50) to create three jobs. Run this on systems with 1, 2, and 3 CPUs (-n 1, -n 2, -n 3). Now, do the same, but with a larger per-CPU cache of size 100. What do you notice about performance as the number of CPUs scales? Use -c to confirm your guesses, and other tracing flags to dive even deeper.
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\multi.py -n 1 -L a:100:100,b:100:100,c:100:100 -M 100  -c -t -C -T   
+Finished time 300
 
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\multi.py -n 2 -L a:100:100,b:100:100,c:100:100 -M 100  -c -t -C -T
+Finished time 150
 
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\multi.py -n 3 -L a:100:100,b:100:100,c:100:100 -M 100  -c -t -C -T
+Finished time 55
 
+```
 
+### 8.  One other aspect of the simulator worth studying is the per-CPU scheduling option, the -p flag. Run with two CPUs again, and this three job configuration (-L a:100:100,b:100:50,c:100:50). How does this option do, as opposed to the hand-controlled affinity limits you put in place above? How does performance change as you alter the ’peek interval’ (-P) to lower or higher values? How does this per-CPU approach work as the number of CPUs scales?
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\multi.py -n 2 -L a:100:100,b:100:100,c:100:100 -p -c -t -T -C
+Finished time 100
+
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\multi.py -n 2 -L a:100:100,b:100:100,c:100:100 -p -c -t -T -C -P 50
+Finished time 130
+```
 
 
 
