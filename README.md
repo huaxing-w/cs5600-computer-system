@@ -714,6 +714,15 @@ REPORTING BUGS
 
 ```
 
+### 2.   Now, run free, perhaps using some of the arguments that might be useful (e.g., -m, to display memory totals in megabytes). How much memory is in your system? How much is free? Do these numbers match your intuition?
+```
+bash-4.2$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:         385388       10181      340515         337       34691      373757
+Swap:          4095         857        3238
+
+```
+### 3.   Next, create a little program that uses a certain amount of memory, called memory-user.c. This program should take one commandline argument: the number of megabytes of memory it will use. When run, it should allocate an array, and constantly stream through the array, touching each entry. The program should do this indefinitely, or, perhaps, for a certain amount of time also specified at the command line.
 
 
 
