@@ -26,14 +26,8 @@ int main(){
             j->IOTime=IOTime;
         }
         m.waitingJobs.push(j);
-        
-        
-        
     }
     m.run();
     m.printFinialResult();
-
-    
-
     return 0;
 }

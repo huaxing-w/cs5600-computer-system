@@ -16,8 +16,6 @@ public:
 
     vector<Job*> finishedJobs;
 
-    
-    
     priority_queue<Job*,vector<Job*>,CompareJob>waitingJobs;
 
     int totalNumOfJobs=0;
