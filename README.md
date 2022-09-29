@@ -599,7 +599,7 @@ Finished time 55
 
 ```
 
-### 8.  One other aspect of the simulator worth studying is the per-CPU scheduling option, the -p flag. Run with two CPUs again, and this three job configuration (-L a:100:100,b:100:50,c:100:50). How does this option do, as opposed to the hand-controlled affinity limits you put in place above? How does performance change as you alter the ’peek interval’ (-P) to lower or higher values? How does this per-CPU approach work as the number of CPUs scales?
+### 8.  One other aspect of the simulator worth studying is the per-CPU scheduling option, the -p flag. Run with two CPUs again, and this three job configuration (-L a: 100 : 100,b : 100 : 50,c: 100 : 50). How does this option do, as opposed to the hand-controlled affinity limits you put in place above? How does performance change as you alter the ’peek interval’ (-P) to lower or higher values? How does this per-CPU approach work as the number of CPUs scales?
 ```
 PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\multi.py -n 2 -L a:100:100,b:100:100,c:100:100 -p -c -t -T -C
 Finished time 100
