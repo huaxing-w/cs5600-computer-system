@@ -832,6 +832,14 @@ ffffffffff600000       4       0       0 r-x--   [ anon ]
 total kB           55424   51732   51296
 ```
 
+# Homework (Code)
+### 1.   First, write a simple program called null.c that creates a pointer to an integer, sets it to NULL, and then tries to dereference it. Compile this into an executable called null. What happens when you run this program?
+```
+bash-4.2$ gcc -o null null.c -Wall
+bash-4.2$ ./null 
+Segmentation fault
+```
+
 
 
 
