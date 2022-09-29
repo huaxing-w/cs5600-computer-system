@@ -723,6 +723,33 @@ Swap:          4095         857        3238
 
 ```
 ### 3.   Next, create a little program that uses a certain amount of memory, called memory-user.c. This program should take one commandline argument: the number of megabytes of memory it will use. When run, it should allocate an array, and constantly stream through the array, touching each entry. The program should do this indefinitely, or, perhaps, for a certain amount of time also specified at the command line.
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[]){
+    int runningTime=atoi(argv[2]);
+    printf("the running time is %d\n",runningTime);
+    //convert the input int to bytes
+    int memory=atoi(argv[1])*1024*1024;
+    int* nums=(int*)malloc(memory);
+    int n= (int) (memory/sizeof(int));
+    int i;
+    clock_t start = clock();
+    for(i=0;i<n;i++){
+        printf("this is %d\n",i);
+        clock_t end=clock();
+        if((double)(end-start)/CLOCKS_PER_SEC > runningTime){
+            printf("time's up\n");
+            break;
+        }
+    }
+    free(nums);
+    return 0;
+}
+```
 
 
 
