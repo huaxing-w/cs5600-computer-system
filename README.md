@@ -1270,5 +1270,31 @@ this is 9
 
 
 ### 8.    Try out some of the other interfaces to memory allocation. For example, create a simple vector-like data structure and related routines that use realloc() to manage the vector. Use an array to store the vectors elements; when a user adds an entry to the vector, use realloc() to allocate more space for it. How well does such a vector perform? How does it compare to a linked list? Use valgrind to help you find bugs.
+```
+https://www.geeksforgeeks.org/dynamic-memory-allocation-in-c-using-malloc-calloc-free-and-realloc/#:~:text=%E2%80%9Ccalloc%E2%80%9D%20or%20%E2%80%9Ccontiguous%20allocation,memory%20of%20the%20specified%20type.
+```
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[]){
+    int* nums=(int*)malloc(10*sizeof(int));
+    int i;
+    for(i=0;i<10;i++){
+        nums[i]=i;
+    }
+    nums=(int*)realloc(nums,20*sizeof(int));
+    for(;i<20;i++){
+        nums[i]=i;
+    }
+    int j;
+    for(j=0;j<20;j++){
+        printf("this is %d\n",nums[j]);
+    }
+    return 0;
+}
+```
 
