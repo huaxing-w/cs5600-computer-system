@@ -1297,4 +1297,4 @@ int main(int argc, char* argv[]){
     return 0;
 }
 ```
-
+### 9.     Spend more time and read about using gdb and valgrind. Knowing your tools is critical; spend the time and learn how to become an expert debugger in the UNIX and C environment.
