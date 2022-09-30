@@ -5,11 +5,24 @@ using namespace std;
 
 int main(){
     cout<<"***************MLFQ simulator***************\n"<<endl;
-    cout<<"How many level of queues do you want to have in MLFQ? (default is 3)\n"<<endl;
+    cout<<"How many level of queues do you want to have in MLFQ? \n"<<endl;
     int numOfQueue;
     cin>>numOfQueue;
     mlfq m(numOfQueue);
     m.numOfQueue=numOfQueue;
+    cout<<"Do you want to config each queue's time quantum (default is 10)? (Y/N)\n"<<endl;
+    string config;
+    cin>>config;
+    if(config=="Y"||config=="y"){
+        for(int i=0;i<numOfQueue;i++){
+            cout<<"Please enter the time quantum for queue "<<i+1<<endl;
+            cout<<"Note: queue 2 has higher priority than queue 1"<<endl;
+            int quantum;
+            cin>>quantum;
+            m.jobQueue[i]->quantum=quantum;
+           
+        }
+    }
     cout<<"How many jobs do you want to have in MLFQ?\n"<<endl;
     int numOfJobs;
     cin>>numOfJobs;

@@ -126,12 +126,12 @@ void mlfq::run(){
             cout<<"Job "<<j->id<<" starts to run at time "<<"["<<curTime<<"]"<<endl;
         }
 
-        j->workedTime+=1;
+        j->workedTime+=jobQueue[j->curQueue]->allotment;
         j->ticksLeft-=j->allotLeft;
         cout<<"["<<curTime<<"] "<<"Run Job "<<j->id<<" at priority "<<j->curQueue<<" [Ticks "<<j->ticksLeft<<" Allot "<<j->allotLeft<<" worked "<<j->workedTime<<" of "<<j->runTime<<" ]"<<endl;
 
         //check if the job is finished
-        if(j->workedTime==j->runTime){
+        if(j->workedTime>=j->runTime){
             cout<<"Job "<<j->id<<" finished at time "<<"["<<curTime+1<<"]"<<endl;
             finishedJobs.push_back(j);
             totalNumOfFinishedJobs++;
