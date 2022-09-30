@@ -769,7 +769,37 @@ Swap:          4095         857        3238
 https://www.geeksforgeeks.org/pmap-command-in-linux-with-examples/
 ```
 ### 6.   To use pmap, you have to know the process ID of the process you’re interested in. Thus, first run ps auxw to see a list of all processes; then, pick an interesting one, such as a browser. You can also use your memory-user program in this case (indeed, you can even have that program call getpid() and print out its PID for your convenience).
-```
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[]){
+    int runningTime=atoi(argv[2]);
+    printf("the running time is %d\n",runningTime);
+    printf("the current process id is %d\n",getpid());
+    //convert the input int to bytes
+    int memory=atoi(argv[1])*1024*1024;
+    int* nums=(int*)malloc(memory);
+    int n= (int) (memory/sizeof(int));
+    int i;
+    clock_t start = clock();
+    while (1){
+        for(i=0;i<n;i++){
+            nums[i]+=1;
+        }
+
+        clock_t end=clock();
+        if((double)(end-start)/CLOCKS_PER_SEC > runningTime){
+            printf("time's up\n");
+            break;
+        }
+    }
+    
+    free(nums);
+    return 0;
+}
 ```
 
 ### 7.   Now run pmap on some of these processes, using various flags (like -X) to reveal many details about the process. What do you see? How many different entities make up a modern address space, as opposed to our simple conception of code/stack/heap?
@@ -840,7 +870,405 @@ bash-4.2$ ./null
 Segmentation fault
 ```
 
+### 2.    Next, compile this program with symbol information included (with the -g flag). Doing so let’s put more information into the executable, enabling the debugger to access more useful information about variable names and the like. Run the program under the debugger by typing gdb null and then, once gdb is running, typing run. What does gdb show you?
+```
+bash-4.2$ gcc -o null null.c -Wall -g
+bash-4.2$ gdb null
+GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-120.el7
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>...
+Reading symbols from /home/huaxing/cs5600/week4/null...done.
+(gdb) run
+Starting program: /home/huaxing/cs5600/week4/null 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004005e6 in main (argc=1, argv=0x7fffffffe468) at null.c:9
+9           printf("this is %d\n",*num);
+Missing separate debuginfos, use: debuginfo-install glibc-2.17-326.el7_9.x86_64
+```
+
+### 3.    Finally, use the valgrind tool on this program. We’ll use the memcheck tool that is a part of valgrind to analyze what happens. Run this by typing in the following: valgrind --leak-check=yes null. What happens when you run this? Can you interpret the output from the tool?
+```
+bash-4.2$ valgrind --leak-check=yes ./null
+==241822== Memcheck, a memory error detector
+==241822== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==241822== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==241822== Command: ./null
+==241822== 
+==241822== Invalid read of size 4
+==241822==    at 0x4005E6: main (null.c:9)
+==241822==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==241822== 
+==241822== 
+==241822== Process terminating with default action of signal 11 (SIGSEGV)
+==241822==  Access not within mapped region at address 0x0
+==241822==    at 0x4005E6: main (null.c:9)
+==241822==  If you believe this happened as a result of a stack
+==241822==  overflow in your program's main thread (unlikely but
+==241822==  possible), you can try to increase the size of the
+==241822==  main thread stack using the --main-stacksize= flag.
+==241822==  The main thread stack size used in this run was 8388608.
+==241822== 
+==241822== HEAP SUMMARY:
+==241822==     in use at exit: 4 bytes in 1 blocks
+==241822==   total heap usage: 1 allocs, 0 frees, 4 bytes allocated
+==241822== 
+==241822== 4 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==241822==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==241822==    by 0x4005D5: main (null.c:7)
+==241822== 
+==241822== LEAK SUMMARY:
+==241822==    definitely lost: 4 bytes in 1 blocks
+==241822==    indirectly lost: 0 bytes in 0 blocks
+==241822==      possibly lost: 0 bytes in 0 blocks
+==241822==    still reachable: 0 bytes in 0 blocks
+==241822==         suppressed: 0 bytes in 0 blocks
+==241822== 
+==241822== For lists of detected and suppressed errors, rerun with: -s
+==241822== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+Segmentation fault
+
+```
+### 4.    Write a simple program that allocates memory using malloc() but forgets to free it before exiting. What happens when this program runs? Can you use gdb to find any problems with it? How about valgrind (again with the --leak-check=yes flag)?
+program runs successfully.  
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[]){
+    int* nums=(int*)malloc(10*sizeof(int));
+    int i;
+    for(i=0;i<10;i++){
+        nums[i]=i;
+    }
+    i=0;
+    for(i=0;i<10;i++){
+        printf("this is %d\n",nums[i]);
+    }
+    return 0;
+}
+
+```
+
+```
+bash-4.2$ gcc -o ch14-q4 ch14-q4.c -Wall -g
+bash-4.2$ gdb ch14-q4
+GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-120.el7
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>...
+Reading symbols from /home/huaxing/cs5600/week4/ch14-q4...done.
+(gdb) run
+Starting program: /home/huaxing/cs5600/week4/ch14-q4 
+this is 0
+this is 1
+this is 2
+this is 3
+this is 4
+this is 5
+this is 6
+this is 7
+this is 8
+this is 9
+[Inferior 1 (process 243821) exited normally]
+Missing separate debuginfos, use: debuginfo-install glibc-2.17-326.el7_9.x86_64
+```
+```
+bash-4.2$ valgrind --leak-check=yes ./ch14-q4
+==244033== Memcheck, a memory error detector
+==244033== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==244033== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==244033== Command: ./ch14-q4
+==244033== 
+this is 0
+this is 1
+this is 2
+this is 3
+this is 4
+this is 5
+this is 6
+this is 7
+this is 8
+this is 9
+==244033== 
+==244033== HEAP SUMMARY:
+==244033==     in use at exit: 40 bytes in 1 blocks
+==244033==   total heap usage: 1 allocs, 0 frees, 40 bytes allocated
+==244033== 
+==244033== 40 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==244033==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==244033==    by 0x400595: main (ch14-q4.c:7)
+==244033== 
+==244033== LEAK SUMMARY:
+==244033==    definitely lost: 40 bytes in 1 blocks
+==244033==    indirectly lost: 0 bytes in 0 blocks
+==244033==      possibly lost: 0 bytes in 0 blocks
+==244033==    still reachable: 0 bytes in 0 blocks
+==244033==         suppressed: 0 bytes in 0 blocks
+==244033== 
+==244033== For lists of detected and suppressed errors, rerun with: -s
+==244033== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+```
+
+### 5.    Write a program that creates an array of integers called data of size 100 using malloc; then, set data[100] to zero. What happens when you run this program? What happens when you run this program using valgrind? Is the program correct?
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[]){
+    int* nums=(int*)malloc(100*sizeof(int));
+    nums[100]=0;
+    free(nums);
+
+    return 0;
+}
+```
+program runs successfully.  
+```
+bash-4.2$ valgrind ./ch14-q5
+==244871== Memcheck, a memory error detector
+==244871== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==244871== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==244871== Command: ./ch14-q5
+==244871== 
+==244871== Invalid write of size 4
+==244871==    at 0x4005A4: main (in /home/huaxing/cs5600/week4/ch14-q5)
+==244871==  Address 0x52051d0 is 0 bytes after a block of size 400 alloc'd
+==244871==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==244871==    by 0x400595: main (in /home/huaxing/cs5600/week4/ch14-q5)
+==244871== 
+==244871== 
+==244871== HEAP SUMMARY:
+==244871==     in use at exit: 0 bytes in 0 blocks
+==244871==   total heap usage: 1 allocs, 1 frees, 400 bytes allocated
+==244871== 
+==244871== All heap blocks were freed -- no leaks are possible
+==244871== 
+==244871== For lists of detected and suppressed errors, rerun with: -s
+==244871== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+```
+### 6.    Create a program that allocates an array of integers (as above), frees them, and then tries to print the value of one of the elements of the array. Does the program run? What happens when you use valgrind on it?
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[]){
+    int* nums=(int*)malloc(10*sizeof(int));
+    int i;
+    for(i=0;i<10;i++){
+        nums[i]=100;
+    }
+    for(i=0;i<10;i++){
+        printf("this is %d\n",nums[i]);
+    }
+    free(nums);
+    i=0;
+    for(i=0;i<10;i++){
+        printf("this is %d\n",nums[i]);
+    }
+
+    return 0;
+}
+```
+```
+bash-4.2$ ./ch14-q6
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 0
+this is 0
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+```
+
+```
+bash-4.2$ valgrind -s ./ch14-q6 
+==246985== Memcheck, a memory error detector
+==246985== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==246985== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==246985== Command: ./ch14-q6
+==246985== 
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+==246985== Invalid read of size 4
+==246985==    at 0x400671: main (in /home/huaxing/cs5600/week4/ch14-q6)
+==246985==  Address 0x5205040 is 0 bytes inside a block of size 40 free'd
+==246985==    at 0x4C2B06D: free (vg_replace_malloc.c:540)
+==246985==    by 0x40064C: main (in /home/huaxing/cs5600/week4/ch14-q6)
+==246985==  Block was alloc'd at
+==246985==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==246985==    by 0x4005D5: main (in /home/huaxing/cs5600/week4/ch14-q6)
+==246985== 
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+this is 100
+==246985== 
+==246985== HEAP SUMMARY:
+==246985==     in use at exit: 0 bytes in 0 blocks
+==246985==   total heap usage: 1 allocs, 1 frees, 40 bytes allocated
+==246985== 
+==246985== All heap blocks were freed -- no leaks are possible
+==246985== 
+==246985== ERROR SUMMARY: 10 errors from 1 contexts (suppressed: 0 from 0)
+==246985== 
+==246985== 10 errors in context 1 of 1:
+==246985== Invalid read of size 4
+==246985==    at 0x400671: main (in /home/huaxing/cs5600/week4/ch14-q6)
+==246985==  Address 0x5205040 is 0 bytes inside a block of size 40 free'd
+==246985==    at 0x4C2B06D: free (vg_replace_malloc.c:540)
+==246985==    by 0x40064C: main (in /home/huaxing/cs5600/week4/ch14-q6)
+==246985==  Block was alloc'd at
+==246985==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==246985==    by 0x4005D5: main (in /home/huaxing/cs5600/week4/ch14-q6)
+==246985== 
+==246985== ERROR SUMMARY: 10 errors from 1 contexts (suppressed: 0 from 0)
+
+```
+### 7.    Now pass a funny value to free (e.g., a pointer in the middle of the array you allocated above). What happens? Do you need tools to find this type of problem?
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[]){
+    int* nums=(int*)malloc(10*sizeof(int));
+    int i;
+    for(i=0;i<10;i++){
+        nums[i]=i;
+    }
+    free(&nums[4]);    
+    for(i=0;i<10;i++){
+        printf("this is %d\n",nums[i]);
+    }
+
+    return 0;
+}
+```
+```
+bash-4.2$ ./ch14-q7
+*** Error in `./ch14-q7': munmap_chunk(): invalid pointer: 0x00000000021bc020 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7f474)[0x7fb880443474]
+./ch14-q7[0x400616]
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x7fb8803e6555]
+./ch14-q7[0x4004f9]
+======= Memory map: ========
+00400000-00401000 r-xp 00000000 00:30 26866146                           /home/huaxing/cs5600/week4/ch14-q7
+00600000-00601000 r--p 00000000 00:30 26866146                           /home/huaxing/cs5600/week4/ch14-q7
+00601000-00602000 rw-p 00001000 00:30 26866146                           /home/huaxing/cs5600/week4/ch14-q7
+021bc000-021dd000 rw-p 00000000 00:00 0                                  [heap]
+7fb8801ae000-7fb8801c3000 r-xp 00000000 fd:00 50331749                   /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7fb8801c3000-7fb8803c2000 ---p 00015000 fd:00 50331749                   /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7fb8803c2000-7fb8803c3000 r--p 00014000 fd:00 50331749                   /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7fb8803c3000-7fb8803c4000 rw-p 00015000 fd:00 50331749                   /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7fb8803c4000-7fb880588000 r-xp 00000000 fd:00 50332326                   /usr/lib64/libc-2.17.so
+7fb880588000-7fb880787000 ---p 001c4000 fd:00 50332326                   /usr/lib64/libc-2.17.so
+7fb880787000-7fb88078b000 r--p 001c3000 fd:00 50332326                   /usr/lib64/libc-2.17.so
+7fb88078b000-7fb88078d000 rw-p 001c7000 fd:00 50332326                   /usr/lib64/libc-2.17.so
+7fb88078d000-7fb880792000 rw-p 00000000 00:00 0 
+7fb880792000-7fb8807b4000 r-xp 00000000 fd:00 50332319                   /usr/lib64/ld-2.17.so
+7fb880992000-7fb880995000 rw-p 00000000 00:00 0 
+7fb8809b1000-7fb8809b3000 rw-p 00000000 00:00 0 
+7fb8809b3000-7fb8809b4000 r--p 00021000 fd:00 50332319                   /usr/lib64/ld-2.17.so
+7fb8809b4000-7fb8809b5000 rw-p 00022000 fd:00 50332319                   /usr/lib64/ld-2.17.so
+7fb8809b5000-7fb8809b6000 rw-p 00000000 00:00 0 
+7fff84453000-7fff84474000 rw-p 00000000 00:00 0                          [stack]
+7fff844b2000-7fff844b4000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+Aborted
+```
+```
+bash-4.2$ valgrind --leak-check=full ./ch14-q7
+==250977== Memcheck, a memory error detector
+==250977== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==250977== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==250977== Command: ./ch14-q7
+==250977== 
+==250977== Invalid free() / delete / delete[] / realloc()
+==250977==    at 0x4C2B06D: free (vg_replace_malloc.c:540)
+==250977==    by 0x400615: main (in /home/huaxing/cs5600/week4/ch14-q7)
+==250977==  Address 0x5205050 is 16 bytes inside a block of size 40 alloc'd
+==250977==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==250977==    by 0x4005D5: main (in /home/huaxing/cs5600/week4/ch14-q7)
+==250977== 
+this is 0
+this is 1
+this is 2
+this is 3
+this is 4
+this is 5
+this is 6
+this is 7
+this is 8
+this is 9
+==250977== 
+==250977== HEAP SUMMARY:
+==250977==     in use at exit: 40 bytes in 1 blocks
+==250977==   total heap usage: 1 allocs, 1 frees, 40 bytes allocated
+==250977== 
+==250977== 40 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==250977==    at 0x4C29F73: malloc (vg_replace_malloc.c:309)
+==250977==    by 0x4005D5: main (in /home/huaxing/cs5600/week4/ch14-q7)
+==250977== 
+==250977== LEAK SUMMARY:
+==250977==    definitely lost: 40 bytes in 1 blocks
+==250977==    indirectly lost: 0 bytes in 0 blocks
+==250977==      possibly lost: 0 bytes in 0 blocks
+==250977==    still reachable: 0 bytes in 0 blocks
+==250977==         suppressed: 0 bytes in 0 blocks
+==250977== 
+==250977== For lists of detected and suppressed errors, rerun with: -s
+==250977== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+```
 
 
+### 8.    Try out some of the other interfaces to memory allocation. For example, create a simple vector-like data structure and related routines that use realloc() to manage the vector. Use an array to store the vectors elements; when a user adds an entry to the vector, use realloc() to allocate more space for it. How well does such a vector perform? How does it compare to a linked list? Use valgrind to help you find bugs.
 
 
