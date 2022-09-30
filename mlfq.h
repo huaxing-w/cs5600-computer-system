@@ -141,17 +141,6 @@ void mlfq::run(){
 
             
         }
-
-        //check if the job is doing IO
-        if(j->ioFreq!=0 && j->workedTime % j->ioFreq==0){
-            j->doingIO=true;
-            cout<<"Job "<<j->id<<" starts to do IO at time "<<"["<<curTime+1<<"]"<<endl;
-            j->startTime=curTime+j->IOTime;
-            waitingJobs.push(j);
-            curTime++;
-            continue;
-
-        }
         
         //check if the job is using up its allotment
         if(j->ticksLeft<=0){
@@ -168,6 +157,19 @@ void mlfq::run(){
             jobQueue[j->curQueue]->q.push_front(j);
             
         }
+
+        //check if the job is doing IO
+        if(j->ioFreq!=0 && j->workedTime % j->ioFreq==0){
+            j->doingIO=true;
+            cout<<"Job "<<j->id<<" starts to do IO at time "<<"["<<curTime+1<<"]"<<endl;
+            j->startTime=curTime+j->IOTime;
+            waitingJobs.push(j);
+            curTime++;
+            continue;
+
+        }
+        
+        
 
         //check if boost
         if(curTime!=0 && curTime%boostTime==0){
