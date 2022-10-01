@@ -2,7 +2,7 @@
 using namespace std;
 class feedBackQueue{
 public:
-    deque<Job*> q;
+    deque<shared_ptr<Job>> q;
     int quantum=10;
     int allotment=1;
     feedBackQueue();

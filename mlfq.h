@@ -3,7 +3,7 @@
 using namespace std;
 
 struct CompareJob{
-    bool operator()(Job* a,Job* b){
+    bool operator()(shared_ptr<Job>& a,shared_ptr<Job>& b){
         return a->startTime>b->startTime;
     }
 };
@@ -12,11 +12,11 @@ struct CompareJob{
 class mlfq{
 public:
     //key is priority, value is queue
-    map<int,feedBackQueue*> jobQueue;
+    map<int,shared_ptr<feedBackQueue>> jobQueue;
 
-    vector<Job*> finishedJobs;
+    vector<shared_ptr<Job>> finishedJobs;
 
-    priority_queue<Job*,vector<Job*>,CompareJob>waitingJobs;
+    priority_queue<shared_ptr<Job>,vector<shared_ptr<Job>>,CompareJob>waitingJobs;
 
     int totalNumOfJobs=0;
     int totalNumOfFinishedJobs=0;
@@ -32,7 +32,7 @@ public:
     
     int findQueue();
     void boost();
-    void addJob(Job* j);
+    void addJob(shared_ptr<Job> j);
     void run();
     void printFinialResult();
 };
@@ -41,8 +41,9 @@ mlfq::mlfq(int numOfQueue){
     
     this->numOfQueue=numOfQueue;
     for(int i=0;i<numOfQueue;i++){
-        feedBackQueue* f1=new feedBackQueue();
-        jobQueue[i]=f1;
+        // feedBackQueue* f1=new feedBackQueue();
+        // jobQueue[i]=f1;
+        jobQueue[i]=make_shared<feedBackQueue>();
     }
 }
 
@@ -59,7 +60,7 @@ void mlfq::boost(){
     for(int i=0;i<numOfQueue-1;i++){
         if(jobQueue[i]->q.size()>0){
             while(!jobQueue[i]->q.empty()){
-                Job* j=jobQueue[i]->q.front();
+                auto j=jobQueue[i]->q.front();
                 j->curQueue=numOfQueue-1;
                 j->ticksLeft=jobQueue[numOfQueue-1]->quantum;
                 j->allotLeft=jobQueue[numOfQueue-1]->allotment;
@@ -71,7 +72,7 @@ void mlfq::boost(){
     cout<<"Boosting at time "<<curTime<<endl;
 }
 
-void mlfq::addJob(Job* j){
+void mlfq::addJob(shared_ptr<Job> j){
 
     if(j->curQueue==-1){
         j->curQueue=numOfQueue-1;
@@ -99,7 +100,7 @@ void mlfq::run(){
     while(totalNumOfFinishedJobs<totalNumOfJobs){
         //check if there is any job waiting to be added to the queue
         while(!waitingJobs.empty() && waitingJobs.top()->startTime<=curTime){
-            Job* j=waitingJobs.top();
+            auto j=waitingJobs.top();
             waitingJobs.pop();
             addJob(j);
         }
@@ -111,7 +112,7 @@ void mlfq::run(){
             continue;
         }
         //get the job from the queue
-        Job* j=jobQueue[queueIndex]->q.front();
+        auto j=jobQueue[queueIndex]->q.front();
         jobQueue[queueIndex]->q.pop_front();
         
 
@@ -142,11 +143,23 @@ void mlfq::run(){
             
         }
         
+        //check if the job is doing IO
+        if(j->ioFreq!=0 && j->workedTime % j->ioFreq==0){
+            j->doingIO=true;
+            cout<<"Job "<<j->id<<" starts to do IO at time "<<"["<<curTime+1<<"]"<<endl;
+            j->startTime=curTime+j->IOTime;
+            waitingJobs.push(j);
+        }
+
+        
         //check if the job is using up its allotment
         if(j->ticksLeft<=0){
             int nxtQueue=max(0,j->curQueue-1);
             j->curQueue=nxtQueue;
-            jobQueue[j->curQueue]->q.push_back(j);
+            if(!j->doingIO){
+                jobQueue[j->curQueue]->q.push_back(j);
+            }
+            
             j->ticksLeft=jobQueue[j->curQueue]->quantum;
             j->allotLeft=jobQueue[j->curQueue]->allotment;
             cout<<"Job "<<j->id<<" is moved to priority "<<j->curQueue<<" at time "<<"["<<curTime+1<<"]"<<endl;
@@ -154,20 +167,15 @@ void mlfq::run(){
             
         }
         else{
-            jobQueue[j->curQueue]->q.push_front(j);
-            
-        }
-
-        //check if the job is doing IO
-        if(j->ioFreq!=0 && j->workedTime % j->ioFreq==0){
-            j->doingIO=true;
-            cout<<"Job "<<j->id<<" starts to do IO at time "<<"["<<curTime+1<<"]"<<endl;
-            j->startTime=curTime+j->IOTime;
-            waitingJobs.push(j);
-            curTime++;
-            continue;
+            if(!j->doingIO){
+                jobQueue[j->curQueue]->q.push_front(j);
+            }
 
         }
+
+        
+
+        
         
         
 
@@ -184,7 +192,7 @@ void mlfq::run(){
 void mlfq::printFinialResult(){
     cout<<"Finial Result:"<<endl;
     for(int i=0;i<finishedJobs.size();i++){
-        Job* j=finishedJobs[i];
+        auto j=finishedJobs[i];
         cout<<"Job "<<j->id<<" starts at "<<"["<<j->initTime<<"] "<<"response time at "<<"["<<j->firstRunTime<<"] "<<"turnaround time is "<<j->endTime-j->initTime<<endl;
     }
 }  

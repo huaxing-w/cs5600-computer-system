@@ -6,18 +6,13 @@ public:
     int runTime;
     int ioFreq=0;
     int IOTime=0;
-
     int curQueue=-1;
     int ticksLeft;
     int allotLeft;
-    
-    
     int workedTime=0;
     bool doingIO=false;
-
     int endTime;
     int firstRunTime=-1;
-    
     Job(int id, int startTime, int runTime);
     Job(int id, int startTime, int runTime, int ioFreq);
 };

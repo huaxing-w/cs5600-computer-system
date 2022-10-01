@@ -41,7 +41,8 @@ int main(){
         cout<<"Please enter "<<i+1<<"th job's start time, run time and io frequency(enter 0 means no IO) (seperated by space)"<<endl;
         int startTime,runTime,ioFreq;
         cin>>startTime>>runTime>>ioFreq;
-        Job* j=new Job(i+1,startTime,runTime,ioFreq);
+        //Job* j=new Job(i+1,startTime,runTime,ioFreq);
+        auto j=make_shared<Job>(i+1,startTime,runTime,ioFreq);
         if(ioFreq>0){
             cout<<"Please enter the IO time"<<endl;
             int IOTime;
