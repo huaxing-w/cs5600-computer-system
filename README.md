@@ -766,6 +766,8 @@ Swap:          4095         857        3238
 ```
 ### 5.   Let’s try one more tool, known as pmap. Spend some time, and read the pmap manual page in detail.
 ```
+The pmap command in Linux is used to display the memory map of a process. A memory map indicates how memory is spread out.
+
 https://www.geeksforgeeks.org/pmap-command-in-linux-with-examples/
 ```
 ### 6.   To use pmap, you have to know the process ID of the process you’re interested in. Thus, first run ps auxw to see a list of all processes; then, pick an interesting one, such as a browser. You can also use your memory-user program in this case (indeed, you can even have that program call getpid() and print out its PID for your convenience).
