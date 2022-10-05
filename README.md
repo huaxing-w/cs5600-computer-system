@@ -60,3 +60,31 @@ Virtual Address Trace
   VA  3: 0x00000043 (decimal:   67) --> VALID: 0x00002317 (decimal: 8983)
   VA  4: 0x0000000d (decimal:   13) --> VALID: 0x000022e1 (decimal: 8929)
 ```
+
+### 2.  Run with these flags: -s 0 -n 10. What value do you have set -l (the bounds register) to in order to ensure that all the generated virtual addresses are within bounds?
+930kb  
+
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\relocation.py -s 0 -n 10 -c -l 930
+
+ARG seed 0
+ARG address space size 1k
+ARG phys mem size 16k
+
+Base-and-Bounds register information:
+
+  Base   : 0x0000360b (decimal 13835)
+  Limit  : 930
+
+Virtual Address Trace
+  VA  0: 0x00000308 (decimal:  776) --> VALID: 0x00003913 (decimal: 14611)
+  VA  1: 0x000001ae (decimal:  430) --> VALID: 0x000037b9 (decimal: 14265)
+  VA  2: 0x00000109 (decimal:  265) --> VALID: 0x00003714 (decimal: 14100)
+  VA  3: 0x0000020b (decimal:  523) --> VALID: 0x00003816 (decimal: 14358)
+  VA  4: 0x0000019e (decimal:  414) --> VALID: 0x000037a9 (decimal: 14249)
+  VA  5: 0x00000322 (decimal:  802) --> VALID: 0x0000392d (decimal: 14637)
+  VA  6: 0x00000136 (decimal:  310) --> VALID: 0x00003741 (decimal: 14145)
+  VA  7: 0x000001e8 (decimal:  488) --> VALID: 0x000037f3 (decimal: 14323)
+  VA  8: 0x00000255 (decimal:  597) --> VALID: 0x00003860 (decimal: 14432)
+  VA  9: 0x000003a1 (decimal:  929) --> VALID: 0x000039ac (decimal: 14764)
+```
