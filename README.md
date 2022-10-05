@@ -88,3 +88,58 @@ Virtual Address Trace
   VA  8: 0x00000255 (decimal:  597) --> VALID: 0x00003860 (decimal: 14432)
   VA  9: 0x000003a1 (decimal:  929) --> VALID: 0x000039ac (decimal: 14764)
 ```
+
+### 3.  Run with these flags: -s 1 -n 10 -l 100. What is the maximum value that base can be set to, such that the address space still fits into physical memory in its entirety?
+```
+16 * 1024 - 100 = 16284
+
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\relocation.py -s 1 -n 10 -l 100 -b 16284 -c
+
+ARG seed 1
+ARG address space size 1k
+ARG phys mem size 16k
+
+Base-and-Bounds register information:
+
+  Base   : 0x00003f9c (decimal 16284)
+  Limit  : 100
+
+Virtual Address Trace
+  VA  0: 0x00000089 (decimal:  137) --> SEGMENTATION VIOLATION
+  VA  1: 0x00000363 (decimal:  867) --> SEGMENTATION VIOLATION
+  VA  2: 0x0000030e (decimal:  782) --> SEGMENTATION VIOLATION
+  VA  3: 0x00000105 (decimal:  261) --> SEGMENTATION VIOLATION
+  VA  4: 0x000001fb (decimal:  507) --> SEGMENTATION VIOLATION
+  VA  5: 0x000001cc (decimal:  460) --> SEGMENTATION VIOLATION
+  VA  6: 0x0000029b (decimal:  667) --> SEGMENTATION VIOLATION
+  VA  7: 0x00000327 (decimal:  807) --> SEGMENTATION VIOLATION
+  VA  8: 0x00000060 (decimal:   96) --> VALID: 0x00003ffc (decimal: 16380)
+  VA  9: 0x0000001d (decimal:   29) --> VALID: 0x00003fb9 (decimal: 16313)
+```
+### 4.  Run some of the same problems above, but with larger address spaces (-a) and physical memories (-p).
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\relocation.py -s 1 -n 10 -l 100 -p 10000 -a 1000 -b 9900 -c
+
+ARG seed 1
+ARG address space size 1000
+ARG phys mem size 10000
+
+Base-and-Bounds register information:
+
+  Base   : 0x000026ac (decimal 9900)
+  Limit  : 100
+
+Virtual Address Trace
+  VA  0: 0x00000086 (decimal:  134) --> SEGMENTATION VIOLATION
+  VA  1: 0x0000034f (decimal:  847) --> SEGMENTATION VIOLATION
+  VA  2: 0x000002fb (decimal:  763) --> SEGMENTATION VIOLATION
+  VA  3: 0x000000ff (decimal:  255) --> SEGMENTATION VIOLATION
+  VA  4: 0x000001ef (decimal:  495) --> SEGMENTATION VIOLATION
+  VA  5: 0x000001c1 (decimal:  449) --> SEGMENTATION VIOLATION
+  VA  6: 0x0000028b (decimal:  651) --> SEGMENTATION VIOLATION
+  VA  7: 0x00000314 (decimal:  788) --> SEGMENTATION VIOLATION
+  VA  8: 0x0000005d (decimal:   93) --> VALID: 0x00002709 (decimal: 9993)
+  VA  9: 0x0000001c (decimal:   28) --> VALID: 0x000026c8 (decimal: 9928)
+```
+
+### 5.  What fraction of randomly-generated virtual addresses are valid, as a function of the value of the bounds register? Make a graph from running with different random seeds, with limit values ranging from 0 up to the maximum size of the address space.
