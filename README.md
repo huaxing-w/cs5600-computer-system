@@ -143,3 +143,4 @@ Virtual Address Trace
 ```
 
 ### 5.  What fraction of randomly-generated virtual addresses are valid, as a function of the value of the bounds register? Make a graph from running with different random seeds, with limit values ranging from 0 up to the maximum size of the address space.
+![q5]('https://github.com/huaxing-w/cs5600-computer-system/blob/homework5/q5.png')
