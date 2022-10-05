@@ -20,3 +20,43 @@ Virtual Address Trace
   VA  3: 0x000001cc (decimal:  460) --> SEGMENTATION VIOLATION
   VA  4: 0x0000029b (decimal:  667) --> SEGMENTATION VIOLATION
 ```
+
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\relocation.py -s 2 -c
+
+ARG seed 2
+ARG address space size 1k
+ARG phys mem size 16k
+
+Base-and-Bounds register information:
+
+  Base   : 0x00003ca9 (decimal 15529)
+  Limit  : 500
+
+Virtual Address Trace
+  VA  0: 0x00000039 (decimal:   57) --> VALID: 0x00003ce2 (decimal: 15586)
+  VA  1: 0x00000056 (decimal:   86) --> VALID: 0x00003cff (decimal: 15615)
+  VA  2: 0x00000357 (decimal:  855) --> SEGMENTATION VIOLATION
+  VA  3: 0x000002f1 (decimal:  753) --> SEGMENTATION VIOLATION
+  VA  4: 0x000002ad (decimal:  685) --> SEGMENTATION VIOLATION
+```
+
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\relocation.py -s 3 -c
+
+ARG seed 3
+ARG address space size 1k
+ARG phys mem size 16k
+
+Base-and-Bounds register information:
+
+  Base   : 0x000022d4 (decimal 8916)
+  Limit  : 316
+
+Virtual Address Trace
+  VA  0: 0x0000017a (decimal:  378) --> SEGMENTATION VIOLATION
+  VA  1: 0x0000026a (decimal:  618) --> SEGMENTATION VIOLATION
+  VA  2: 0x00000280 (decimal:  640) --> SEGMENTATION VIOLATION
+  VA  3: 0x00000043 (decimal:   67) --> VALID: 0x00002317 (decimal: 8983)
+  VA  4: 0x0000000d (decimal:   13) --> VALID: 0x000022e1 (decimal: 8929)
+```
