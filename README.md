@@ -144,3 +144,106 @@ Virtual Address Trace
 
 ### 5.  What fraction of randomly-generated virtual addresses are valid, as a function of the value of the bounds register? Make a graph from running with different random seeds, with limit values ranging from 0 up to the maximum size of the address space.
 ![q5](https://github.com/huaxing-w/cs5600-computer-system/blob/homework5/q5.png)
+
+
+# Homework (Simulation)
+
+### 1.  First let’s use a tiny address space to translate some addresses. Here’s a simple set of parameters with a few different random seeds; can you translate the addresses?
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\segmentation.py segmentation.py -h
+Usage: segmentation.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -s SEED, --seed=SEED  the random seed
+  -A ADDRESSES, --addresses=ADDRESSES
+                        a set of comma-separated pages to access; -1 means
+                        randomly generate
+  -a ASIZE, --asize=ASIZE
+                        address space size (e.g., 16, 64k, 32m, 1g)
+  -p PSIZE, --physmem=PSIZE
+                        physical memory size (e.g., 16, 64k, 32m, 1g)
+  -n NUM, --numaddrs=NUM
+                        number of virtual addresses to generate
+  -b BASE0, --b0=BASE0  value of segment 0 base register
+  -l LEN0, --l0=LEN0    value of segment 0 limit register
+  -B BASE1, --b1=BASE1  value of segment 1 base register
+  -L LEN1, --l1=LEN1    value of segment 1 limit register
+  -c                    compute answers for me
+```
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\segmentation.py segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 0 -c
+ARG seed 0
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x0000006c (decimal:  108) --> VALID in SEG1: 0x000001ec (decimal:  492)
+  VA  1: 0x00000061 (decimal:   97) --> SEGMENTATION VIOLATION (SEG1)
+  VA  2: 0x00000035 (decimal:   53) --> SEGMENTATION VIOLATION (SEG0)
+  VA  3: 0x00000021 (decimal:   33) --> SEGMENTATION VIOLATION (SEG0)
+  VA  4: 0x00000041 (decimal:   65) --> SEGMENTATION VIOLATION (SEG1)
+```
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\segmentation.py segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 2 -c
+ARG seed 2
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x0000007a (decimal:  122) --> VALID in SEG1: 0x000001fa (decimal:  506)
+  VA  1: 0x00000079 (decimal:  121) --> VALID in SEG1: 0x000001f9 (decimal:  505)
+  VA  2: 0x00000007 (decimal:    7) --> VALID in SEG0: 0x00000007 (decimal:    7)
+  VA  3: 0x0000000a (decimal:   10) --> VALID in SEG0: 0x0000000a (decimal:   10)
+  VA  4: 0x0000006a (decimal:  106) --> SEGMENTATION VIOLATION (SEG1)
+```
+
+### 2.  Now, let’s see if we understand this tiny address space we’ve constructed (using the parameters from the question above). What is the highest legal virtual address in segment 0? What about the lowest legal virtual address in segment 1? What are the lowest and highest illegal addresses in this entire address space? Finally, how would you run segmentation.py with the -A flag to test if you are right?
+```
+The highest legal virtual address in segment 0: 19  
+The lowest legal virtual address in segment 1: 128 - 20 = 108  
+Segment 0 physical addresses: 0-19  
+Segment 1 physical addresses: 492-511  
+The lowest illegal physical address: 20  
+The highest illegal physical address: 491  
+
+```
+
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 1 -A 19,108,20,107 -c
+ARG seed 1
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x00000013 (decimal:   19) --> VALID in SEG0: 0x00000013 (decimal:   19)
+  VA  1: 0x0000006c (decimal:  108) --> VALID in SEG1: 0x000001ec (decimal:  492)
+  VA  2: 0x00000014 (decimal:   20) --> SEGMENTATION VIOLATION (SEG0)
+  VA  3: 0x0000006b (decimal:  107) --> SEGMENTATION VIOLATION (SEG1)
+```
+
+
