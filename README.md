@@ -288,3 +288,412 @@ limit is 0.9 * space size
 set limit to 0
 ```
 
+# Homework (Simulation)
+
+### 1.  First run with the flags -n 10 -H 0 -p BEST -s 0 to generate a few random allocations and frees. Can you predict what alloc()/free() will return? Can you guess the state of the free list after each request? What do you notice about the free list over time?
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -n 10 -H 0 -p BEST -s 0 -c                          
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy BEST
+listOrder ADDRSORT
+coalesce False
+numOps 10
+range 10
+percentAlloc 50
+allocList
+compute True
+
+ptr[0] = Alloc(3) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1003 sz:97 ]
+
+Free(ptr[0])
+returned 0
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1003 sz:97 ]
+
+ptr[1] = Alloc(5) returned 1003 (searched 2 elements)
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1008 sz:92 ]
+
+Free(ptr[1])
+returned 0
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:92 ]
+
+ptr[2] = Alloc(8) returned 1008 (searched 3 elements)
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1016 sz:84 ]
+
+Free(ptr[2])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[3] = Alloc(8) returned 1008 (searched 4 elements)
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1016 sz:84 ]
+
+Free(ptr[3])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[4] = Alloc(2) returned 1000 (searched 4 elements)
+Free List [ Size 4 ]: [ addr:1002 sz:1 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[5] = Alloc(7) returned 1008 (searched 4 elements)
+Free List [ Size 4 ]: [ addr:1002 sz:1 ][ addr:1003 sz:5 ][ addr:1015 sz:1 ][ addr:1016 sz:84 ]
+```
+### 2.  How are the results different when using a WORST fit policy to search the free list (-p WORST)? What changes?
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -n 10 -H 0 -p WORST -s 0 -c
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy WORST
+listOrder ADDRSORT
+coalesce False
+numOps 10
+range 10
+percentAlloc 50
+allocList
+compute True
+
+ptr[0] = Alloc(3) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1003 sz:97 ]
+
+Free(ptr[0])
+returned 0
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1003 sz:97 ]
+
+ptr[1] = Alloc(5) returned 1003 (searched 2 elements)
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1008 sz:92 ]
+
+Free(ptr[1])
+returned 0
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:92 ]
+
+ptr[2] = Alloc(8) returned 1008 (searched 3 elements)
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1016 sz:84 ]
+
+Free(ptr[2])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[3] = Alloc(8) returned 1016 (searched 4 elements)
+Free List [ Size 4 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1024 sz:76 ]
+
+Free(ptr[3])
+returned 0
+Free List [ Size 5 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:8 ][ addr:1024 sz:76 ]
+
+ptr[4] = Alloc(2) returned 1024 (searched 5 elements)
+Free List [ Size 5 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:8 ][ addr:1026 sz:74 ]
+
+ptr[5] = Alloc(7) returned 1026 (searched 5 elements)
+Free List [ Size 5 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:8 ][ addr:1033 sz:67 ]
+
+```
+
+### 3.  What about when using FIRST fit (-p FIRST)? What speeds up when you use first fit?
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -n 10 -H 0 -p FIRST -s 0 -c
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy FIRST
+listOrder ADDRSORT
+coalesce False
+numOps 10
+range 10
+percentAlloc 50
+allocList
+compute True
+
+ptr[0] = Alloc(3) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1003 sz:97 ]
+
+Free(ptr[0])
+returned 0
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1003 sz:97 ]
+
+ptr[1] = Alloc(5) returned 1003 (searched 2 elements)
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1008 sz:92 ]
+ptr[3] = Alloc(8) returned 1008 (searched 3 elements)
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1016 sz:84 ]
+
+Free(ptr[3])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[4] = Alloc(2) returned 1000 (searched 1 elements)
+Free List [ Size 4 ]: [ addr:1002 sz:1 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[5] = Alloc(7) returned 1008 (searched 3 elements)
+Free List [ Size 4 ]: [ addr:1002 sz:1 ][ addr:1003 sz:5 ][ addr:1015 sz:1 ][ addr:1016 sz:84 ]
+```
+### 4.   For the above questions, how the list is kept ordered can affect the time it takes to find a free location for some of the policies. Use the different free list orderings (-l ADDRSORT, -l SIZESORT+, -l SIZESORT-) to see how the policies and the list orderings interact.
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -n 10 -H 0 -p FIRST -s 0 -l ADDRSORT  -c
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy FIRST
+listOrder ADDRSORT
+coalesce False
+numOps 10
+range 10
+percentAlloc 50
+allocList 
+compute True
+
+ptr[0] = Alloc(3) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1003 sz:97 ]
+
+Free(ptr[0])
+returned 0
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1003 sz:97 ]
+
+ptr[1] = Alloc(5) returned 1003 (searched 2 elements)
+Free List [ Size 2 ]: [ addr:1000 sz:3 ][ addr:1008 sz:92 ]
+
+Free(ptr[1])
+returned 0
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:92 ]
+
+ptr[2] = Alloc(8) returned 1008 (searched 3 elements)
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1016 sz:84 ]
+
+Free(ptr[2])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[3] = Alloc(8) returned 1008 (searched 3 elements)
+Free List [ Size 3 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1016 sz:84 ]
+
+Free(ptr[3])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:3 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[4] = Alloc(2) returned 1000 (searched 1 elements)
+Free List [ Size 4 ]: [ addr:1002 sz:1 ][ addr:1003 sz:5 ][ addr:1008 sz:8 ][ addr:1016 sz:84 ]
+
+ptr[5] = Alloc(7) returned 1008 (searched 3 elements)
+Free List [ Size 4 ]: [ addr:1002 sz:1 ][ addr:1003 sz:5 ][ addr:1015 sz:1 ][ addr:1016 sz:84 ]
+
+```
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -n 10 -H 0 -p FIRST -s 0 -l SIZESORT-  -c
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy FIRST
+listOrder SIZESORT-
+coalesce False
+numOps 10
+range 10
+percentAlloc 50
+allocList
+compute True
+
+ptr[0] = Alloc(3) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1003 sz:97 ]
+
+Free(ptr[0])
+returned 0
+Free List [ Size 2 ]: [ addr:1003 sz:97 ][ addr:1000 sz:3 ]
+
+ptr[1] = Alloc(5) returned 1003 (searched 1 elements)
+Free List [ Size 2 ]: [ addr:1008 sz:92 ][ addr:1000 sz:3 ]
+
+Free(ptr[1])
+returned 0
+Free List [ Size 3 ]: [ addr:1008 sz:92 ][ addr:1003 sz:5 ][ addr:1000 sz:3 ]
+
+ptr[2] = Alloc(8) returned 1008 (searched 1 elements)
+Free List [ Size 3 ]: [ addr:1016 sz:84 ][ addr:1003 sz:5 ][ addr:1000 sz:3 ]
+
+Free(ptr[2])
+returned 0
+Free List [ Size 4 ]: [ addr:1016 sz:84 ][ addr:1008 sz:8 ][ addr:1003 sz:5 ][ addr:1000 sz:3 ]
+
+ptr[3] = Alloc(8) returned 1016 (searched 1 elements)
+Free List [ Size 4 ]: [ addr:1024 sz:76 ][ addr:1008 sz:8 ][ addr:1003 sz:5 ][ addr:1000 sz:3 ]
+
+Free(ptr[3])
+returned 0
+Free List [ Size 5 ]: [ addr:1024 sz:76 ][ addr:1008 sz:8 ][ addr:1016 sz:8 ][ addr:1003 sz:5 ][ addr:1000 sz:3 ]
+
+ptr[4] = Alloc(2) returned 1024 (searched 1 elements)
+Free List [ Size 5 ]: [ addr:1026 sz:74 ][ addr:1008 sz:8 ][ addr:1016 sz:8 ][ addr:1003 sz:5 ][ addr:1000 sz:3 ]
+
+ptr[5] = Alloc(7) returned 1026 (searched 1 elements)
+Free List [ Size 5 ]: [ addr:1033 sz:67 ][ addr:1008 sz:8 ][ addr:1016 sz:8 ][ addr:1003 sz:5 ][ addr:1000 sz:3 ]
+
+```
+
+### 5.   Coalescing of a free list can be quite important. Increase the number of random allocations (say to -n 1000). What happens to larger allocation requests over time? Run with and without coalescing (i.e., without and with the -C flag). What differences in outcome do you see? How big is the free list over time in each case? Does the ordering of the list matter in this case?
+```
+without coalescing, it will be 50 elements in free list to search
+with coalescing, it will only be 1 element in free list to search
+```
+
+### 6.   What happens when you change the percent allocated fraction -P to higher than 50? What happens to allocations as it nears 100? What about as the percent nears 0?
+```
+if it is 100, then there would only be one element in the list
+if it is 1, we will have many free element in list this is size of 1
+
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -n 10 -H 0 -p FIRST -s 0  -c -P 100
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy FIRST
+listOrder ADDRSORT
+coalesce False
+numOps 10
+range 10
+percentAlloc 100
+allocList
+compute True
+
+ptr[0] = Alloc(8) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1008 sz:92 ]
+
+ptr[1] = Alloc(3) returned 1008 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1011 sz:89 ]
+
+ptr[2] = Alloc(5) returned 1011 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1016 sz:84 ]
+
+ptr[3] = Alloc(4) returned 1016 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1020 sz:80 ]
+
+ptr[4] = Alloc(6) returned 1020 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1026 sz:74 ]
+
+ptr[5] = Alloc(6) returned 1026 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1032 sz:68 ]
+
+ptr[6] = Alloc(8) returned 1032 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1040 sz:60 ]
+
+ptr[7] = Alloc(3) returned 1040 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1043 sz:57 ]
+
+ptr[8] = Alloc(10) returned 1043 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1053 sz:47 ]
+
+ptr[9] = Alloc(10) returned 1053 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1063 sz:37 ]
+
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -n 10 -H 0 -p FIRST -s 0  -c -P 1  
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy FIRST
+listOrder ADDRSORT
+coalesce False
+numOps 10
+range 10
+percentAlloc 1
+allocList
+compute True
+
+ptr[0] = Alloc(5) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1005 sz:95 ]
+
+Free(ptr[0])
+returned 0
+Free List [ Size 2 ]: [ addr:1000 sz:5 ][ addr:1005 sz:95 ]
+
+ptr[1] = Alloc(2) returned 1000 (searched 1 elements)
+Free List [ Size 2 ]: [ addr:1002 sz:3 ][ addr:1005 sz:95 ]
+
+Free(ptr[1])
+returned 0
+Free List [ Size 3 ]: [ addr:1000 sz:2 ][ addr:1002 sz:3 ][ addr:1005 sz:95 ]
+
+ptr[2] = Alloc(9) returned 1005 (searched 3 elements)
+Free List [ Size 3 ]: [ addr:1000 sz:2 ][ addr:1002 sz:3 ][ addr:1014 sz:86 ]
+
+Free(ptr[2])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:2 ][ addr:1002 sz:3 ][ addr:1005 sz:9 ][ addr:1014 sz:86 ]
+
+ptr[3] = Alloc(2) returned 1000 (searched 1 elements)
+Free List [ Size 3 ]: [ addr:1002 sz:3 ][ addr:1005 sz:9 ][ addr:1014 sz:86 ]
+
+Free(ptr[3])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:2 ][ addr:1002 sz:3 ][ addr:1005 sz:9 ][ addr:1014 sz:86 ]
+
+ptr[4] = Alloc(4) returned 1005 (searched 3 elements)
+Free List [ Size 4 ]: [ addr:1000 sz:2 ][ addr:1002 sz:3 ][ addr:1009 sz:5 ][ addr:1014 sz:86 ]
+
+Free(ptr[4])
+returned 0
+Free List [ Size 5 ]: [ addr:1000 sz:2 ][ addr:1002 sz:3 ][ addr:1005 sz:4 ][ addr:1009 sz:5 ][ addr:1014 sz:86 ]
+```
+
+### 7.   What kind of specific requests can you make to generate a highlyfragmented free space? Use the -A flag to create fragmented free lists, and see how different policies and options change the organization of the free list.
+```
+PS C:\Users\huaxi\Desktop\cs5600-computer-system> python .\malloc.py -c -A +10,+10,+10,+10,+10,-0,-1,-2,-3,-4
+seed 0
+size 100
+baseAddr 1000
+headerSize 0
+alignment -1
+policy BEST
+listOrder ADDRSORT
+coalesce False
+numOps 10
+range 10
+percentAlloc 50
+allocList +10,+10,+10,+10,+10,-0,-1,-2,-3,-4
+compute True
+
+ptr[0] = Alloc(10) returned 1000 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1010 sz:90 ]
+
+ptr[1] = Alloc(10) returned 1010 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1020 sz:80 ]
+
+ptr[2] = Alloc(10) returned 1020 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1030 sz:70 ]
+
+ptr[3] = Alloc(10) returned 1030 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1040 sz:60 ]
+
+ptr[4] = Alloc(10) returned 1040 (searched 1 elements)
+Free List [ Size 1 ]: [ addr:1050 sz:50 ]
+
+Free(ptr[0])
+returned 0
+Free List [ Size 2 ]: [ addr:1000 sz:10 ][ addr:1050 sz:50 ]
+
+Free(ptr[1])
+returned 0
+Free List [ Size 3 ]: [ addr:1000 sz:10 ][ addr:1010 sz:10 ][ addr:1050 sz:50 ]
+
+Free(ptr[2])
+returned 0
+Free List [ Size 4 ]: [ addr:1000 sz:10 ][ addr:1010 sz:10 ][ addr:1020 sz:10 ][ addr:1050 sz:50 ]
+
+Free(ptr[3])
+returned 0
+Free List [ Size 5 ]: [ addr:1000 sz:10 ][ addr:1010 sz:10 ][ addr:1020 sz:10 ][ addr:1030 sz:10 ][ addr:1050 sz:50 ]
+
+Free(ptr[4])
+returned 0
+Free List [ Size 6 ]: [ addr:1000 sz:10 ][ addr:1010 sz:10 ][ addr:1020 sz:10 ][ addr:1030 sz:10 ][ addr:1040 sz:10 ][ addr:1050 sz:50 ]
+
+```
