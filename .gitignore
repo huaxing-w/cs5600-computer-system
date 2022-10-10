@@ -1,0 +1,10 @@
+build
+mkfs
+mkrom
+
+*.elf
+*.lst
+*.bin
+*.mcs
+*.img
+
