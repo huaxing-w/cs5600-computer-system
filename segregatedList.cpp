@@ -11,10 +11,24 @@ using namespace std;
 class segregatedList{
     public:
     memoryBlock* head;
+    map<int, memoryBlock*>popularMemory;
+    
     segregatedList(int size) {
-        head = new memoryBlock(0, size);
+        head = new memoryBlock(60, size);
+        memoryBlock* popular1=new memoryBlock(0,10);
+        memoryBlock* popular2=new memoryBlock(10,20);
+        memoryBlock* popular3=new memoryBlock(30,30);
+        popularMemory[10]=popular1;
+        popularMemory[20]=popular2;
+        popularMemory[30]=popular3;
+
     }
     memoryBlock* allocate(int size) {
+        if(popularMemory.find(size)!=popularMemory.end()){
+            memoryBlock* newBlock=popularMemory[size];
+            popularMemory.erase(size);
+            return newBlock;
+        }
         memoryBlock* cur=head;
         while(cur){
             if(cur->size>=size){
@@ -28,6 +42,18 @@ class segregatedList{
         return NULL;
     }
     void freeMemory(memoryBlock* block) {
+        if(block->size==10 && block->address==0){
+            popularMemory[10]=block;
+            return;
+        }
+        if(block->size==20 && block->address==10){
+            popularMemory[20]=block;
+            return;
+        }
+        if(block->size==30 && block->address==30){
+            popularMemory[30]=block;
+            return;
+        }
         block->next=head;
         head=block;
         sortMemory();
@@ -106,7 +132,7 @@ class segregatedList{
 };
 
 int main(){
-    segregatedList ff=segregatedList(100);
+    segregatedList ff=segregatedList(120);
     ff.printMemory();
     memoryBlock* block1=ff.allocate(10);
     ff.printMemory();
@@ -114,11 +140,23 @@ int main(){
     ff.printMemory();
     memoryBlock* block3=ff.allocate(30);
     ff.printMemory();
+    memoryBlock* block4=ff.allocate(10);
+    ff.printMemory();
+    memoryBlock* block5=ff.allocate(20);
+    ff.printMemory();
+    memoryBlock* block6=ff.allocate(30);
+    ff.printMemory();
     ff.freeMemory(block1);
     ff.printMemory();
     ff.freeMemory(block3);
     ff.printMemory();
     ff.freeMemory(block2);
+    ff.printMemory();
+    ff.freeMemory(block4);
+    ff.printMemory();
+    ff.freeMemory(block5);
+    ff.printMemory();
+    ff.freeMemory(block6);
     ff.printMemory();
     
     return 0;
