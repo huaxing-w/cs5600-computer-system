@@ -1,3 +1,31 @@
+# firstFit
+```
+1. use linked list to implement memory management policy.
+2. when allocate new memory block, use the first available free memory block.
+3. when free memory block, insert the the freed memory block to the head of the linked list.
+4. after inserting, sort the linked list based on the address and merge the memory block if they are continuious.
+```
+
+# bestFit
+```
+1. use linked list to implement memory management policy.
+2. search through the free list and find chunks that are bigger than the requested one.
+3. return the one that is the smallest in that group of candidates
+```
+
+# worstFit
+```
+1. use linked list to implement memory management policy.
+2. search through the free list and find chunks that are bigger than the requested one.
+3. return the one that is the biggest free chunk in the free list
+```
+
+# nextFit
+```
+1. use linked list to implement memory management policy.
+2. create an extra pointer to the location to memorize the last search point
+3. next search will start from the extra pointer location to spread the search scope.
+```
 # binaryBuddy
 
 ```
@@ -17,15 +45,6 @@ Assumption:
     /  \
   ...   ...
 
-
-```
-
-# firstFit
-```
-1. use linked list to implement memory management policy.
-2. when allocate new memory block, use the first available free memory block.
-3. when free memory block, insert the the freed memory block to the head of the linked list.
-4. after inserting, sort the linked list based on the address and merge the memory block if they are continuious.
 ```
 
 # segregatedList

@@ -102,6 +102,7 @@ class binaryBuddy{
                 return nullptr;
             }
         }
+
         
     }
 
