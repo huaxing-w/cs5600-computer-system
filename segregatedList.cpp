@@ -8,12 +8,12 @@ using namespace std;
     memoryBlock(int address, int size): address(address), size(size), next(NULL) {}
 };
 
-class segregatedList{
+class firstFit{
     public:
     memoryBlock* head;
     map<int, memoryBlock*>popularMemory;
     
-    segregatedList(int size) {
+    firstFit(int size) {
         head = new memoryBlock(60, size);
         memoryBlock* popular1=new memoryBlock(0,10);
         memoryBlock* popular2=new memoryBlock(10,20);
@@ -132,7 +132,7 @@ class segregatedList{
 };
 
 int main(){
-    segregatedList ff=segregatedList(120);
+    firstFit ff=firstFit(120);
     ff.printMemory();
     memoryBlock* block1=ff.allocate(10);
     ff.printMemory();

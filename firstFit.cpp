@@ -8,10 +8,10 @@ using namespace std;
     memoryBlock(int address, int size): address(address), size(size), next(NULL) {}
 };
 
-class segregatedList{
+class firstFit{
     public:
     memoryBlock* head;
-    segregatedList(int size) {
+    firstFit(int size) {
         head = new memoryBlock(0, size);
     }
     memoryBlock* allocate(int size) {
@@ -106,7 +106,7 @@ class segregatedList{
 };
 
 int main(){
-    segregatedList ff=segregatedList(100);
+    firstFit ff=firstFit(100);
     ff.printMemory();
     memoryBlock* block1=ff.allocate(10);
     ff.printMemory();
