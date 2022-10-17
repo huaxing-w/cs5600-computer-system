@@ -1,18 +1,19 @@
 #include "bits/stdc++.h"
 using namespace std;
 
- struct memoryBlock {
+struct memoryBlock{
     int address;
     int size;
     memoryBlock* next;
-    memoryBlock(int address, int size): address(address), size(size), next(NULL) {}
+    memoryBlock(int add,int s):address(add),size(s),next(nullptr){}
 };
 
-class firstFit{
+
+class bestFit{
     public:
     memoryBlock* head;
-    firstFit(int size) {
-        head = new memoryBlock(0, size);
+    bestFit(int s){
+        head=new memoryBlock(0,s);
     }
 
     void clearUp(){
@@ -34,29 +35,27 @@ class firstFit{
         head=dummy->next;
     }
 
-
-
-    memoryBlock* allocate(int size) {
+    memoryBlock* allocate(int size){
         memoryBlock* cur=head;
+        memoryBlock* selectedMemory=nullptr;
+        int diff=1e9;
         while(cur){
-            if(cur->size>=size){
-                memoryBlock* newBlock = new memoryBlock(cur->address, size);
-                cur->address+=size;
-                cur->size-=size;
-                clearUp();
-                return newBlock;
+            if(cur->size>=size && diff>(cur->size-size)){
+                selectedMemory=cur;
+                diff=cur->size-size;
             }
             cur=cur->next;
         }
-        return NULL;
+        if(selectedMemory){
+            memoryBlock* newBlock=new memoryBlock(selectedMemory->address,size);
+            selectedMemory->address+=size;
+            selectedMemory->size-=size;
+            clearUp();
+            return newBlock;
+        }
+        return nullptr;
     }
-    void freeMemory(memoryBlock* block) {
-        block->next=head;
-        head=block;
-        sortMemory();
-        mergeMemory();
 
-    }
     void printMemory() {
         memoryBlock* cur=head;
         while(cur){
@@ -65,6 +64,14 @@ class firstFit{
             cur=cur->next;
         }
         cout<<endl;
+    }
+
+    void freeMemory(memoryBlock* block) {
+        block->next=head;
+        head=block;
+        sortMemory();
+        mergeMemory();
+
     }
     void mergeMemory(){
         memoryBlock* dummy=new memoryBlock(-1,-1);
@@ -126,33 +133,40 @@ class firstFit{
         };
         head=sortFunc(head,NULL);
     }
+
 };
 
+
+
+
 int main(){
-    firstFit ff=firstFit(100);
-    ff.printMemory();
-    memoryBlock* block1=ff.allocate(5);
-    ff.printMemory();
-    memoryBlock* block2=ff.allocate(18);
-    ff.printMemory();
-    memoryBlock* block3=ff.allocate(26);
-    ff.printMemory();
-    memoryBlock* block4=ff.allocate(4);
-    ff.printMemory();
-    memoryBlock* block5=ff.allocate(7);
-    ff.printMemory();
-    memoryBlock* block6=ff.allocate(2);
-    ff.printMemory();
+    bestFit bf=bestFit(100);
+    bf.printMemory();
+    memoryBlock* block1=bf.allocate(5);
+    bf.printMemory();
+    memoryBlock* block2=bf.allocate(18);
+    bf.printMemory();
+    memoryBlock* block3=bf.allocate(26);
+    bf.printMemory();
+    memoryBlock* block4=bf.allocate(4);
+    bf.printMemory();
+    memoryBlock* block5=bf.allocate(7);
+    bf.printMemory();
+    memoryBlock* block6=bf.allocate(2);
+    bf.printMemory();
 
 
 
-    ff.freeMemory(block2);
-    ff.printMemory();
-    ff.freeMemory(block4);
-    ff.printMemory();
+    bf.freeMemory(block2);
+    bf.printMemory();
+    bf.freeMemory(block4);
+    bf.printMemory();
 
-    memoryBlock* block7=ff.allocate(3);
-    ff.printMemory();
+    memoryBlock* block7=bf.allocate(4);
+    bf.printMemory();
+    memoryBlock* block8=bf.allocate(18);
+    bf.printMemory();
     
+
     return 0;
 }
