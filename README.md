@@ -132,6 +132,7 @@ use python to do this work.
 ```
 
 ### 4.  Next, graph the results, making a graph that looks similar to the one above. Use a good tool like ploticus or even zplot. Visualization usually makes the data much easier to digest; why do you think that is?
+
 ![q4](https://github.com/huaxing-w/cs5600-computer-system/blob/homework6/q4.png)
 
 
