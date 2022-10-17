@@ -7,7 +7,7 @@ x=[]
 y=[]
 
 page=1
-while page<=(1<<20):
+while page<=(1<<14):
     x.append(page)
     process = subprocess.run(['./tlb2.exe',str(page), '10000'], 
                         stdout=subprocess.PIPE, 
