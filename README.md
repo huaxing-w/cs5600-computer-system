@@ -38,7 +38,97 @@ set address space % page size !=0.
 
 # Homework (Measurement)
 
-### 5.  What fraction of randomly-generated virtual addresses are valid, as a function of the value of the bounds register? Make a graph from running with different random seeds, with limit values ranging from 0 up to the maximum size of the address space.
-![q5](https://github.com/huaxing-w/cs5600-computer-system/blob/homework5/q5.png)
+### 1.  For timing, you’ll need to use a timer (e.g., gettimeofday()). How precise is such a timer? How long does an operation have to take in order for you to time it precisely? (this will help determine how many times, in a loop, you’ll have to repeat a page access in order to time it successfully)
+
+```
+gettimeofday() has two members
+
+struct timeval  {
+  time_t tv_sec ;   
+  suseconds_t tv_usec ;   
+};
+
+tv_sec is seconds.
+tv_usec is microseconds.
+
+```
+
+```
+clock_gettime also has two members
+
+struct timespec {
+  time_t tv_sec;    
+  long tv_nsec;      
+};
+
+tv_sec is to the seconds.
+tv_nsec is to the nanoseconds
+
+hence, we will be using clock_gettime as it is more precise.
+
+```
+
+### 2.  Write the program, called tlb.c, that can roughly measure the cost of accessing each page. Inputs to the program should be: the number of pages to touch and the number of trials.
+```c
+#include <stdio.h>  
+#include <stdlib.h> 
+#include <time.h>   
+#include <unistd.h> 
+#include <windows.h>
+
+#define handle_error(msg)                                                       \
+    do {                                                                        \
+        perror(msg);                                                            \
+        exit(EXIT_FAILURE);                                                     \
+    } while (0)
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        fprintf(stderr, "Usage: %s pages trials\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+    //for the windows user use system_info to get the page size
+    SYSTEM_INFO si;
+    GetSystemInfo(&si);
+    long PAGESIZE = si.dwPageSize;
+
+    long jump = PAGESIZE / sizeof(int);    // 4096/4 = 1024
+    // the page input
+    int pages = atoi(argv[1]);
+    // the number of trials
+    int trials = atoi(argv[2]);
+    if (pages <= 0 || trials <= 0) {
+        fprintf(stderr, "Invalid input\n");
+        exit(EXIT_FAILURE);
+    }
+    int *nums = (int*)calloc(pages, PAGESIZE);
+    struct timespec start, end;
+    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start) == -1){
+        handle_error("clock_gettime");
+    }
+        
+
+    for (int j = 0; j < trials; j++) {
+        for (int i = 0; i < pages * jump; i += jump){
+            nums[i] += 1;
+        }
+    }
+
+    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end) == -1){
+        handle_error("clock_gettime");
+    }
+        
+
+    printf("%f\n",((end.tv_sec - start.tv_sec) * 1e9+end.tv_nsec-start.tv_nsec)/(trials * pages));
+    free(nums);
+    return 0;
+}
+```
+### 3.  Now write a script in your favorite scripting language (bash?) to run this program, while varying the number of pages accessed from 1 up to a few thousand, perhaps incrementing by a factor of two per iteration. Run the script on different machines and gather some data. How many trials are needed to get reliable measurements?
+```
+use python to do this work.
+
+10000 trials should be good enough.
+```
 
 
