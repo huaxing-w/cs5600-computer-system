@@ -6,14 +6,15 @@
 
 #define handle_error(msg)                                                       \
     do {                                                                        \
+        printf("error: ");                                                      \
         perror(msg);                                                            \
-        exit(EXIT_FAILURE);                                                     \
+        exit(0);                                                                \
     } while (0)
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
-        fprintf(stderr, "Usage: %s pages trials\n", argv[0]);
-        exit(EXIT_FAILURE);
+        printf("wrong agrc number\n");
+        exit(0);
     }
 
 
@@ -28,18 +29,19 @@ int main(int argc, char *argv[]) {
     // the number of trials
     int trials = atoi(argv[2]);
     if (pages <= 0 || trials <= 0) {
-        fprintf(stderr, "Invalid input\n");
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "please check input again\n");
+        exit(0);
     }
     int *nums = (int*)calloc(pages, PAGESIZE);
-    struct timespec start, end;
+    struct timespec start;
+    struct timespec end;
     if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start) == -1){
         handle_error("clock_gettime");
     }
         
 
     for (int j = 0; j < trials; j++) {
-        for (int i = 0; i < pages * jump; i += jump){
+        for (int i = 0; i < pages*jump; i += jump){
             nums[i] += 1;
         }
     }
