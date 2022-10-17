@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "please check input again\n");
         exit(0);
     }
-    int *nums = (int*)calloc(pages, PAGESIZE);
+    int* nums = (int*)calloc(pages, PAGESIZE);
     struct timespec start;
     struct timespec end;
     if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start) == -1){
