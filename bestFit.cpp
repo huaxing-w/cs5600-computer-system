@@ -140,32 +140,29 @@ class bestFit{
 
 
 int main(){
-    bestFit bf=bestFit(100);
+    bestFit bf=bestFit(1000);
     bf.printMemory();
-    memoryBlock* block1=bf.allocate(5);
+    memoryBlock* block1=bf.allocate(100);
     bf.printMemory();
-    memoryBlock* block2=bf.allocate(18);
+    memoryBlock* block2=bf.allocate(200);
     bf.printMemory();
-    memoryBlock* block3=bf.allocate(26);
+    memoryBlock* block3=bf.allocate(50);
     bf.printMemory();
-    memoryBlock* block4=bf.allocate(4);
+    memoryBlock* block4=bf.allocate(300);
     bf.printMemory();
-    memoryBlock* block5=bf.allocate(7);
+
+    bf.freeMemory(block1);
+    bf.freeMemory(block3);
     bf.printMemory();
-    memoryBlock* block6=bf.allocate(2);
+
+    memoryBlock* block5=bf.allocate(49);
     bf.printMemory();
+
+    
 
 
 
-    bf.freeMemory(block2);
-    bf.printMemory();
-    bf.freeMemory(block4);
-    bf.printMemory();
-
-    memoryBlock* block7=bf.allocate(4);
-    bf.printMemory();
-    memoryBlock* block8=bf.allocate(18);
-    bf.printMemory();
+    
     
 
     return 0;

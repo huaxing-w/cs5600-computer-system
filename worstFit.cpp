@@ -136,32 +136,26 @@ class worstFit{
 };
 
 int main(){
-    worstFit wf=worstFit(100);
+    worstFit wf=worstFit(1000);
     wf.printMemory();
-    memoryBlock* block1=wf.allocate(5);
+    memoryBlock* block1=wf.allocate(100);
     wf.printMemory();
-    memoryBlock* block2=wf.allocate(18);
+    memoryBlock* block2=wf.allocate(200);
     wf.printMemory();
-    memoryBlock* block3=wf.allocate(26);
+    memoryBlock* block3=wf.allocate(50);
     wf.printMemory();
-    memoryBlock* block4=wf.allocate(4);
+    memoryBlock* block4=wf.allocate(300);
     wf.printMemory();
-    memoryBlock* block5=wf.allocate(7);
-    wf.printMemory();
-    memoryBlock* block6=wf.allocate(2);
+    
+    wf.freeMemory(block1);
+    wf.freeMemory(block3);
+
     wf.printMemory();
 
-
-
-    wf.freeMemory(block2);
-    wf.printMemory();
-    wf.freeMemory(block4);
+    memoryBlock* block5=wf.allocate(49);
     wf.printMemory();
 
-    memoryBlock* block7=wf.allocate(4);
-    wf.printMemory();
-    memoryBlock* block8=wf.allocate(18);
-    wf.printMemory();
+    
 
     return 0;
 }

@@ -129,30 +129,24 @@ class firstFit{
 };
 
 int main(){
-    firstFit ff=firstFit(100);
+    firstFit ff=firstFit(1000);
     ff.printMemory();
-    memoryBlock* block1=ff.allocate(5);
+    memoryBlock* block1=ff.allocate(100);
     ff.printMemory();
-    memoryBlock* block2=ff.allocate(18);
+    memoryBlock* block2=ff.allocate(200);
     ff.printMemory();
-    memoryBlock* block3=ff.allocate(26);
+    memoryBlock* block3=ff.allocate(50);
     ff.printMemory();
-    memoryBlock* block4=ff.allocate(4);
+    memoryBlock* block4=ff.allocate(300);
     ff.printMemory();
-    memoryBlock* block5=ff.allocate(7);
-    ff.printMemory();
-    memoryBlock* block6=ff.allocate(2);
-    ff.printMemory();
-
-
-
-    ff.freeMemory(block2);
-    ff.printMemory();
-    ff.freeMemory(block4);
+    
+    ff.freeMemory(block1);
+    ff.freeMemory(block3);
     ff.printMemory();
 
-    memoryBlock* block7=ff.allocate(3);
+    memoryBlock* block5=ff.allocate(49);
     ff.printMemory();
+
     
     return 0;
 }

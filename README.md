@@ -1,3 +1,41 @@
+# evaluation
+```
+use the same memory allocation case to run three different policies.
+Assume we have a free memory block starting from address 0, size of 1000.
+
+we will allocation 4 block of memory, size of 100,200,50,300.
+now the free list should be [address:650 size:350] as the first 650 has been allocated.
+
+if we free the block of 100, and 50
+
+we will see the free list as this
+[address:0 size:100]->[address:300 size:50]->[address:650 size:350]
+
+the implementation I have here when freeing the memory is that,I will put the freed memory into the front of the list, and then sort the free list based on its address, then check if there are some memory blocks are there can be merged.
+
+Here comes to the difference when using different policy.
+
+now if when want to allocate another 49 size of memory.
+
+for the worstFit policy, it will allocate the memory block at 650, the free list looks like this:
+[address:0 size:100]->[address:300 size:50]->[address:699 size:301]
+
+for the firstFit policy, it will allocate the memory block at 0, the free list looks like this:
+[address:49 size:51]->[address:300 size:50]->[address:650 size:350]
+
+for the bestFit policy, it will allocate the memory block at 300, the free list looks like this:
+[address:0 size:100]->[address:349 size:1]->[address:650 size:350]
+
+```
+|             |        Best Fit        |
+| ----------- | -----------------------|
+| pros        | reduce space waste     |
+| cons        | it takes O(n) to search the best block      |
+
+
+
+
+
 # firstFit
 ```
 1. use linked list to implement memory management policy.
