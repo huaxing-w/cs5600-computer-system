@@ -11,7 +11,9 @@ if we free the block of 100, and 50
 we will see the free list as this
 [address:0 size:100]->[address:300 size:50]->[address:650 size:350]
 
-the implementation I have here when freeing the memory is that,I will put the freed memory into the front of the list, and then sort the free list based on its address, then check if there are some memory blocks are there can be merged.
+the implementation I have here when freeing the memory is that,I will put the 
+freed memory into the front of the list, and then sort the free list based on its address, 
+then check if there are some memory blocks are there can be merged.
 
 Here comes to the difference when using different policy.
 
