@@ -27,10 +27,10 @@ for the bestFit policy, it will allocate the memory block at 300, the free list 
 [address:0 size:100]->[address:349 size:1]->[address:650 size:350]
 
 ```
-|             |        Best Fit        |
-| ----------- | -----------------------|
-| pros        | reduce space waste     |
-| cons        | it takes O(n) to search the best block      |
+|             |        Pros       |       Cons       |
+| Best Fit    | reduce space waste|   it takes O(n) to search the best block |
+| First Fit    | quickly find the free memory|pollutes the beginning of the free list with small objects, but we use sort and merge to resolve this issue|
+| Worst Fit |tap into the biggest memory block, make use of all memory|it takes O(n) to search the best block|
 
 
 
