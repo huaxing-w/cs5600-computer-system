@@ -28,6 +28,7 @@ for the bestFit policy, it will allocate the memory block at 300, the free list 
 
 ```
 |              | Pros                                                     | Cons                                                      |
+| ------------ | -------------------------------------------------------- | --------------------------------------------------------- |
 | Best Fit     | reduce space waste                                       | it takes O(n) to search the best block                    |
 | First Fit    | quickly find the free memory                             | pollutes the beginning of the free list with small objects|
 | Worst Fit    | tap into the biggest memory block, make use of all memory| it takes O(n) to search the best block                    |
