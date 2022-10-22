@@ -1,40 +1,43 @@
 # Homework (Simulation)
 
-### 1.  Before doing any translations, let’s use the simulator to study how linear page tables change size given different parameters. Compute the size of linear page tables as different parameters change. Some suggested inputs are below; by using the -v flag, you can see how many page-table entries are filled. First, to understand how linear page table size changes as the address space grows, run with these flags: -P 1k -a 1m -p 512m -v -n 0 -P 1k -a 2m -p 512m -v -n 0 -P 1k -a 4m -p 512m -v -n 0 Then, to understand how linear page table size changes as page size grows: -P 1k -a 1m -p 512m -v -n 0 -P 2k -a 1m -p 512m -v -n 0 -P 4k -a 1m -p 512m -v -n 0 Before running any of these, try to think about the expected trends. How should page-table size change as the address space grows? As the page size grows? Why not use big pages in general?
-
+### 1.  With a linear page table, you need a single register to locate the page table, assuming that hardware does the lookup upon a TLB miss. How many registers do you need to locate a two-level page table? A three-level table?
 ```
-page table size is address space size / page size  
-if we use a big page size, say 1G, and we just want to allocate 3kb memory, then we will have to give user 1G page, and most of the memory is wasted.  
+same, just one top level page directory. 
 ```
 
-
-
-
-
-
-### 2.  Now let’s do some translations. Start with some small examples, and change the number of pages that are allocated to the address space with the -u flag. For example: -P 1k -a 16k -p 32k -v -u 0 -P 1k -a 16k -p 32k -v -u 25 -P 1k -a 16k -p 32k -v -u 50 -P 1k -a 16k -p 32k -v -u 75 -P 1k -a 16k -p 32k -v -u 100 What happens as you increase the percentage of pages that are allocated in each address space?
-```
-more and more page are valid right now. 
+### 2.  Use the simulator to perform translations given random seeds 0, 1, and 2, and check your answers using the -c flag. How many memory references are needed to perform each lookup?
 
 ```
+3
+
+virtual address 0x611c is 11000 01000 11100
+11000 
+ 24     
+ PDE   
+       01000 
+        8
+       PTE   
+             11100
+             offset
+```
 
 
 
 
-### 3.   Now let’s try some different random seeds, and some different (and sometimes quite crazy) address-space parameters, for variety: -P 8 -a 32 -p 1024 -v -s 1 -P 8k -a 32k -p 1m -v -s 2 -P 1m -a 256m -p 512m -v -s 3 Which of these parameter combinations are unrealistic? Why?
+### 3.   Given your understanding of how cache memory works, how do you think memory references to the page table will behave in the cache? Will they lead to lots of cache hits (and thus fast accesses?) Or lots of misses (and thus slow accesses)?
 
 ```
-the first one, page size is 8, address is 32, physical is 1024, they are too small.
-similiarly, the third one, too big.
+upon a hit, the physical address is formed directly without accessing the page
+table at all, as before. Only upon a TLB miss does the hardware need to
+perform the full multi-level lookup. On this path, you can see the cost of
+our traditional two-level page table: two additional memory accesses to
+look up a valid translation.
+
+so it is faster.
+
+```
 
 
-```
-### 4.  Use the program to try out some other problems. Can you find the limits of where the program doesn’t work anymore? For example, what happens if the address-space size is bigger than physical memory?
-```
-set address space, or physical to 0.  
-set physical < address space. 
-set address space % page size !=0.  
-```
 
 # Homework (Measurement)
 
