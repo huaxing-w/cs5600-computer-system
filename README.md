@@ -41,125 +41,42 @@ so it is faster.
 
 # Homework (Measurement)
 
-### 1.  For timing, you’ll need to use a timer (e.g., gettimeofday()). How precise is such a timer? How long does an operation have to take in order for you to time it precisely? (this will help determine how many times, in a loop, you’ll have to repeat a page access in order to time it successfully)
+### 1.  First, open two separate terminal connections to the same machine, so that you can easily run something in one window and the other. Now, in one window, run vmstat 1, which shows statistics about machine usage every second. Read the man page, the associated README, and any other information you need so that you can understand its output. Leave this window running vmstat for the rest of the exercises below. Now, we will run the program mem.c but with very little memory usage. This can be accomplished by typing ./mem 1 (which uses only 1 MB of memory). How do the CPU usage statistics change when running mem? Do the numbers in the user time column make sense? How does this change when running more than one instance of mem at once?
+
 
 ```
-gettimeofday() has two members
+https://phoenixnap.com/kb/vmstat-command#:~:text=The%20vmstat%20command%20(short%20for,by%20specifying%20a%20sampling%20period.
 
-struct timeval  {
-  time_t tv_sec ;   
-  suseconds_t tv_usec ;   
-};
+vmstat man
 
-tv_sec is seconds.
-tv_usec is microseconds.
+us user time col increase
+id idle time decrease
 
+if you run more than two mem.c, the user time will X2.
 ```
 
-```
-clock_gettime also has two members
-
-struct timespec {
-  time_t tv_sec;    
-  long tv_nsec;      
-};
-
-tv_sec is to the seconds.
-tv_nsec is to the nanoseconds
-
-hence, we will be using clock_gettime as it is more precise.
+### 2.  Let’s now start looking at some of the memory statistics while running mem. We’ll focus on two columns: swpd (the amount of virtual memory used) and free (the amount of idle memory). Run ./mem 1024 (which allocates 1024 MB) and watch how these values change. Then kill the running program (by typing control-c) and watch again how the values change. What do you notice about the values? In particular, how does the free column change when the program exits? Does the amount of free memory increase by the expected amount when mem exits?
 
 ```
+when we start to run mem 1024, the free col increased
+when we stop the mem, the free col decreased.
 
-### 2.  Write the program, called tlb.c, that can roughly measure the cost of accessing each page. Inputs to the program should be: the number of pages to touch and the number of trials.
-```c
-#include <stdio.h>  
-#include <stdlib.h> 
-#include <time.h>   
-#include <unistd.h> 
-#include <windows.h>
-
-#define handle_error(msg)                                                       \
-    do {                                                                        \
-        printf("error: ");                                                      \
-        perror(msg);                                                            \
-        exit(0);                                                                \
-    } while (0)
-
-int main(int argc, char *argv[]) {
-    if (argc < 3) {
-        printf("wrong agrc number\n");
-        exit(0);
-    }
-
-
-    //for the windows user use system_info to get the page size
-    SYSTEM_INFO si;
-    GetSystemInfo(&si);
-    long PAGESIZE = si.dwPageSize;
-
-    long jump = PAGESIZE / sizeof(int);    // 4096/4 = 1024
-    // the page input
-    int pages = atoi(argv[1]);
-    // the number of trials
-    int trials = atoi(argv[2]);
-    if (pages <= 0 || trials <= 0) {
-        fprintf(stderr, "please check input again\n");
-        exit(0);
-    }
-    int *nums = (int*)calloc(pages, PAGESIZE);
-    struct timespec start;
-    struct timespec end;
-    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start) == -1){
-        handle_error("clock_gettime");
-    }
-        
-
-    for (int j = 0; j < trials; j++) {
-        for (int i = 0; i < pages*jump; i += jump){
-            nums[i] += 1;
-        }
-    }
-
-    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end) == -1){
-        handle_error("clock_gettime");
-    }
-        
-
-    printf("%f\n",((end.tv_sec - start.tv_sec) * 1e9+end.tv_nsec-start.tv_nsec)/(trials * pages));
-    free(nums);
-    return 0;
-}
 ```
-### 3.  Now write a script in your favorite scripting language (bash?) to run this program, while varying the number of pages accessed from 1 up to a few thousand, perhaps incrementing by a factor of two per iteration. Run the script on different machines and gather some data. How many trials are needed to get reliable measurements?
+### 3.  We’ll next look at the swap columns (si and so), which indicate how much swapping is taking place to and from the disk. Of course, to activate these, you’ll need to run mem with large amounts of memory. First, examine how much free memory is on your Linux system (for example, by typing cat /proc/meminfo; type man proc for details on the /proc file system and the types of information you can find there). One of the first entries in /proc/meminfo is the total amount of memory in your system. Let’s assume it’s something like 8 GB of memory; if so, start by running mem 4000 (about 4 GB) and watching the swap in/out columns. Do they ever give non-zero values? Then, try with 5000, 6000, etc. What happens to these values as the program enters the second loop (and beyond), as compared to the first loop? How much data (total) are swapped in and out during the second, third, and subsequent loops? (do the numbers make sense?)
 ```
-use python to do this work.
+khoury server has too much memory, it's hardly to see the non-zero si and so
 
-10000 trials should be good enough.
-```
-
-### 4.  Next, graph the results, making a graph that looks similar to the one above. Use a good tool like ploticus or even zplot. Visualization usually makes the data much easier to digest; why do you think that is?
-
-![q4](https://github.com/huaxing-w/cs5600-computer-system/blob/homework6/q4.png)
-
-
-### 5.  One thing to watch out for is compiler optimization. Compilers do all sorts of clever things, including removing loops which increment values that no other part of the program subsequently uses. How can you ensure the compiler does not remove the main loop above from your TLB size estimator?
-```
-disable the optimization function.
+but swap should be increase in the first loop, and then decrease in the second.
 
 ```
 
-### 6.  Another thing to watch out for is the fact that most systems today ship with multiple CPUs, and each CPU, of course, has its own TLB hierarchy. To really get good measurements, you have to run your code on just one CPU, instead of letting the scheduler bounce it from one CPU to the next. How can you do that? (hint: look up “pinning a thread” on Google for some clues) What will happen if you don’t do this, and the code moves from one CPU to the other?
+### 4.  Do the same experiments as above, but now watch the other statistics (such as CPU utilization, and block I/O statistics). How do they change when mem is running?
 ```
-for windows user, set process affinity
-
-start /affinity 1 tlb2.exe 
-```
-
-### 7.  Another issue that might arise relates to initialization. If you don’t initialize the array a above before accessing it, the first time you access it will be very expensive, due to initial access costs such as demand zeroing. Will this affect your code and its timing? What can you do to counterbalance these potential costs?
-```
-use calloc instead of malloc
+user time increased.
+bo increased.
 ```
 
+### 5.  Now let’s examine performance. Pick an input for mem that comfortably fits in memory (say 4000 if the amount of memory on the system is 8 GB). How long does loop 0 take (and subsequent loops 1, 2, etc.)? Now pick a size comfortably beyond the size of memory (say 12000 again assuming 8 GB of memory). How long do the loops take here? How do the bandwidth numbers compare? How different is performance when constantly swapping versus fitting everything comfortably in memory? Can you make a graph, with the size of memory used by mem on the x-axis, and the bandwidth of accessing said memory on the y-axis? Finally, how does the performance of the first loop compare to that of subsequent loops, for both the case where everything fits in memory and where it doesn’t?
+```
 
-
+```
