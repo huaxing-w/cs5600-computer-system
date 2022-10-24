@@ -27,13 +27,8 @@ virtual address 0x611c is 11000 01000 11100
 ### 3.   Given your understanding of how cache memory works, how do you think memory references to the page table will behave in the cache? Will they lead to lots of cache hits (and thus fast accesses?) Or lots of misses (and thus slow accesses)?
 
 ```
-upon a hit, the physical address is formed directly without accessing the page
-table at all, as before. Only upon a TLB miss does the hardware need to
-perform the full multi-level lookup. On this path, you can see the cost of
-our traditional two-level page table: two additional memory accesses to
-look up a valid translation.
+only tlb miss will perform the lookup, so it is faster.
 
-so it is faster.
 
 ```
 
