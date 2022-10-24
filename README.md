@@ -388,4 +388,5 @@ FINALSTATS hits 3   misses 6   hitrate 33.33
 ```
 ### 5.   Now generate a trace with some locality. How can you generate such a trace? How does LRU perform on it? How much better than RAND is LRU? How does CLOCK do? How about CLOCK with different numbers of clock bits?
 ```
+![q5](https://github.com/huaxing-w/cs5600-computer-system/blob/homework7/q55.png)
 ```
