@@ -110,13 +110,10 @@ class lru{
             access(i);
             cout<<endl;
         }
-        
         float hitrate=hitCount*1.0/(hitCount+missCount);
         cout.setf(ios::fixed);
         cout<<setprecision(2);
-        
         cout<<"FINALSTATS: "<<"hits: "<<hitCount<<" misses: "<<missCount<<" hitrate: "<<hitrate<<endl;
-
     }
 };
 
@@ -125,7 +122,7 @@ class lru{
 
 int main(){
     lru cache(3);
-    vector<int>temp={1,2,3,4,5,4,3,2};
+    vector<int>temp={1,2,3,4,5,4,3,2,312,3,12,3,123,2,45,3215,34,15,4325,43,25,23,1423,14,231,4,231,453,25,432};
     cache.run(temp);
     return 0;
 }
