@@ -28,9 +28,11 @@ int main(){
         for(int j=0;j<i;j++){
             lst.push_back(thread(increment,c));
         }
+
         for(int j=0;j<i;j++){
             lst[j].join();
         }
+        
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
         
