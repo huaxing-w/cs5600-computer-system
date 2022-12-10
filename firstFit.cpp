@@ -1,27 +1,27 @@
 #include "bits/stdc++.h"
 using namespace std;
 
- struct memoryBlock {
+ struct memoryBlockL {
     int address;
     int size;
-    memoryBlock* next;
-    memoryBlock(int address, int size): address(address), size(size), next(NULL) {}
+    memoryBlockL* next;
+    memoryBlockL(int address, int size): address(address), size(size), next(NULL) {}
 };
 
 class firstFit{
     public:
-    memoryBlock* head;
+    memoryBlockL* head;
     firstFit(int size) {
-        head = new memoryBlock(0, size);
+        head = new memoryBlockL(0, size);
     }
 
     void clearUp(){
-        memoryBlock* dummy=new memoryBlock(-1,-1);
+        memoryBlockL* dummy=new memoryBlockL(-1,-1);
         dummy->next=head;
-        memoryBlock* cur=head;
-        memoryBlock* perv=dummy;
+        memoryBlockL* cur=head;
+        memoryBlockL* perv=dummy;
         while(cur){
-            memoryBlock* nxt=cur->next;
+            memoryBlockL* nxt=cur->next;
             if(cur->size==0){
                 perv->next=nxt;
                 cur=nxt;
@@ -36,11 +36,11 @@ class firstFit{
 
 
 
-    memoryBlock* allocate(int size) {
-        memoryBlock* cur=head;
+    memoryBlockL* allocate(int size) {
+        memoryBlockL* cur=head;
         while(cur){
             if(cur->size>=size){
-                memoryBlock* newBlock = new memoryBlock(cur->address, size);
+                memoryBlockL* newBlock = new memoryBlockL(cur->address, size);
                 cur->address+=size;
                 cur->size-=size;
                 clearUp();
@@ -50,7 +50,7 @@ class firstFit{
         }
         return NULL;
     }
-    void freeMemory(memoryBlock* block) {
+    void freeMemory(memoryBlockL* block) {
         block->next=head;
         head=block;
         sortMemory();
@@ -58,7 +58,7 @@ class firstFit{
 
     }
     void printMemory() {
-        memoryBlock* cur=head;
+        memoryBlockL* cur=head;
         while(cur){
             cout<<"[address:"<<cur->address<<" size:"<<cur->size<<"]";
             if(cur->next) cout<<"->";
@@ -67,12 +67,12 @@ class firstFit{
         cout<<endl;
     }
     void mergeMemory(){
-        memoryBlock* dummy=new memoryBlock(-1,-1);
-        memoryBlock* perv=dummy;
-        memoryBlock* cur=head;
+        memoryBlockL* dummy=new memoryBlockL(-1,-1);
+        memoryBlockL* perv=dummy;
+        memoryBlockL* cur=head;
         perv->next=cur;
         while(cur->next){
-            memoryBlock* next=cur->next;
+            memoryBlockL* next=cur->next;
             if(perv->address==-1){
                 perv=cur;
                 cur=next;
@@ -96,7 +96,7 @@ class firstFit{
 
     }
     void sortMemory() {
-        function<memoryBlock*(memoryBlock*,memoryBlock*)>merge=[&](memoryBlock* a, memoryBlock* b){
+        function<memoryBlockL*(memoryBlockL*,memoryBlockL*)>merge=[&](memoryBlockL* a, memoryBlockL* b){
             if(!a) return b;
             if(!b) return a;
             if(a->address<b->address){
@@ -107,7 +107,7 @@ class firstFit{
             return b;
         };
 
-        function<memoryBlock*(memoryBlock*,memoryBlock*)>sortFunc=[&](memoryBlock* head,memoryBlock* tail)->memoryBlock*{
+        function<memoryBlockL*(memoryBlockL*,memoryBlockL*)>sortFunc=[&](memoryBlockL* head,memoryBlockL* tail)->memoryBlockL*{
             if(!head){
                 return nullptr;
             }
@@ -115,13 +115,13 @@ class firstFit{
                 head->next=nullptr;
                 return head;
             }
-            memoryBlock* slow=head;
-            memoryBlock* fast=head;
+            memoryBlockL* slow=head;
+            memoryBlockL* fast=head;
             while(fast!=tail && fast->next!=tail){
                 slow=slow->next;
                 fast=fast->next->next;
             }
-            memoryBlock* mid=slow;
+            memoryBlockL* mid=slow;
             return merge(sortFunc(head,mid),sortFunc(mid,tail));
         };
         head=sortFunc(head,NULL);
@@ -131,20 +131,20 @@ class firstFit{
 int main(){
     firstFit ff=firstFit(1000);
     ff.printMemory();
-    memoryBlock* block1=ff.allocate(100);
+    memoryBlockL* block1=ff.allocate(100);
     ff.printMemory();
-    memoryBlock* block2=ff.allocate(200);
+    memoryBlockL* block2=ff.allocate(200);
     ff.printMemory();
-    memoryBlock* block3=ff.allocate(50);
+    memoryBlockL* block3=ff.allocate(50);
     ff.printMemory();
-    memoryBlock* block4=ff.allocate(300);
+    memoryBlockL* block4=ff.allocate(300);
     ff.printMemory();
     
     ff.freeMemory(block1);
     ff.freeMemory(block3);
     ff.printMemory();
 
-    memoryBlock* block5=ff.allocate(49);
+    memoryBlockL* block5=ff.allocate(49);
     ff.printMemory();
 
     

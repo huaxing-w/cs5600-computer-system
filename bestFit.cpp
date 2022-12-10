@@ -1,28 +1,28 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-struct memoryBlock{
+struct memoryBlockL{
     int address;
     int size;
-    memoryBlock* next;
-    memoryBlock(int add,int s):address(add),size(s),next(nullptr){}
+    memoryBlockL* next;
+    memoryBlockL(int add,int s):address(add),size(s),next(nullptr){}
 };
 
 
 class bestFit{
     public:
-    memoryBlock* head;
+    memoryBlockL* head;
     bestFit(int s){
-        head=new memoryBlock(0,s);
+        head=new memoryBlockL(0,s);
     }
 
     void clearUp(){
-        memoryBlock* dummy=new memoryBlock(-1,-1);
+        memoryBlockL* dummy=new memoryBlockL(-1,-1);
         dummy->next=head;
-        memoryBlock* cur=head;
-        memoryBlock* perv=dummy;
+        memoryBlockL* cur=head;
+        memoryBlockL* perv=dummy;
         while(cur){
-            memoryBlock* nxt=cur->next;
+            memoryBlockL* nxt=cur->next;
             if(cur->size==0){
                 perv->next=nxt;
                 cur=nxt;
@@ -35,9 +35,9 @@ class bestFit{
         head=dummy->next;
     }
 
-    memoryBlock* allocate(int size){
-        memoryBlock* cur=head;
-        memoryBlock* selectedMemory=nullptr;
+    memoryBlockL* allocate(int size){
+        memoryBlockL* cur=head;
+        memoryBlockL* selectedMemory=nullptr;
         int diff=1e9;
         while(cur){
             if(cur->size>=size && diff>(cur->size-size)){
@@ -47,7 +47,7 @@ class bestFit{
             cur=cur->next;
         }
         if(selectedMemory){
-            memoryBlock* newBlock=new memoryBlock(selectedMemory->address,size);
+            memoryBlockL* newBlock=new memoryBlockL(selectedMemory->address,size);
             selectedMemory->address+=size;
             selectedMemory->size-=size;
             clearUp();
@@ -57,7 +57,7 @@ class bestFit{
     }
 
     void printMemory() {
-        memoryBlock* cur=head;
+        memoryBlockL* cur=head;
         while(cur){
             cout<<"[address:"<<cur->address<<" size:"<<cur->size<<"]";
             if(cur->next) cout<<"->";
@@ -66,7 +66,7 @@ class bestFit{
         cout<<endl;
     }
 
-    void freeMemory(memoryBlock* block) {
+    void freeMemory(memoryBlockL* block) {
         block->next=head;
         head=block;
         sortMemory();
@@ -74,12 +74,12 @@ class bestFit{
 
     }
     void mergeMemory(){
-        memoryBlock* dummy=new memoryBlock(-1,-1);
-        memoryBlock* perv=dummy;
-        memoryBlock* cur=head;
+        memoryBlockL* dummy=new memoryBlockL(-1,-1);
+        memoryBlockL* perv=dummy;
+        memoryBlockL* cur=head;
         perv->next=cur;
         while(cur->next){
-            memoryBlock* next=cur->next;
+            memoryBlockL* next=cur->next;
             if(perv->address==-1){
                 perv=cur;
                 cur=next;
@@ -103,7 +103,7 @@ class bestFit{
 
     }
     void sortMemory() {
-        function<memoryBlock*(memoryBlock*,memoryBlock*)>merge=[&](memoryBlock* a, memoryBlock* b){
+        function<memoryBlockL*(memoryBlockL*,memoryBlockL*)>merge=[&](memoryBlockL* a, memoryBlockL* b){
             if(!a) return b;
             if(!b) return a;
             if(a->address<b->address){
@@ -114,7 +114,7 @@ class bestFit{
             return b;
         };
 
-        function<memoryBlock*(memoryBlock*,memoryBlock*)>sortFunc=[&](memoryBlock* head,memoryBlock* tail)->memoryBlock*{
+        function<memoryBlockL*(memoryBlockL*,memoryBlockL*)>sortFunc=[&](memoryBlockL* head,memoryBlockL* tail)->memoryBlockL*{
             if(!head){
                 return nullptr;
             }
@@ -122,13 +122,13 @@ class bestFit{
                 head->next=nullptr;
                 return head;
             }
-            memoryBlock* slow=head;
-            memoryBlock* fast=head;
+            memoryBlockL* slow=head;
+            memoryBlockL* fast=head;
             while(fast!=tail && fast->next!=tail){
                 slow=slow->next;
                 fast=fast->next->next;
             }
-            memoryBlock* mid=slow;
+            memoryBlockL* mid=slow;
             return merge(sortFunc(head,mid),sortFunc(mid,tail));
         };
         head=sortFunc(head,NULL);
@@ -142,20 +142,20 @@ class bestFit{
 int main(){
     bestFit bf=bestFit(1000);
     bf.printMemory();
-    memoryBlock* block1=bf.allocate(100);
+    memoryBlockL* block1=bf.allocate(100);
     bf.printMemory();
-    memoryBlock* block2=bf.allocate(200);
+    memoryBlockL* block2=bf.allocate(200);
     bf.printMemory();
-    memoryBlock* block3=bf.allocate(50);
+    memoryBlockL* block3=bf.allocate(50);
     bf.printMemory();
-    memoryBlock* block4=bf.allocate(300);
+    memoryBlockL* block4=bf.allocate(300);
     bf.printMemory();
 
     bf.freeMemory(block1);
     bf.freeMemory(block3);
     bf.printMemory();
 
-    memoryBlock* block5=bf.allocate(49);
+    memoryBlockL* block5=bf.allocate(49);
     bf.printMemory();
 
     
